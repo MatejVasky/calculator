@@ -1,8 +1,33 @@
-from arithmetic_expression_parser import ExpressionParser, ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError
+from arithmetic_expression_parser import ExpressionParser, ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError
 from functionality_database import FunctionalityDatabase
 import unittest
 
 class ParserTest(unittest.TestCase):
+    def test_needs_operation_no_tokens(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = []
+        self.assertFalse(parser.needs_operation(tokens))
+    def test_needs_operation_after_number(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = ['5']
+        self.assertTrue(parser.needs_operation(tokens))
+    def test_needs_operation_after_variable(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = ['x']
+        self.assertTrue(parser.needs_operation(tokens))
+    def test_needs_operation_after_operator(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = ['5', '+']
+        self.assertFalse(parser.needs_operation(tokens))
+    def test_needs_operation_after_left_bracket(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = ['(']
+        self.assertFalse(parser.needs_operation(tokens))
+    def test_needs_operation_after_right_bracket(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = ['(', '5', '+', '5', ')']
+        self.assertTrue(parser.needs_operation(tokens))
+
     def test_process_number_first_token(self):
         parser = ExpressionParser(FunctionalityDatabase())
         tokens = []
@@ -246,6 +271,217 @@ class ParserTest(unittest.TestCase):
         parser.process_right_bracket(tokens, brackets, ')')
         self.assertListEqual(tokens, ['(', '(', '4', '*', '(', '5', '+', '5', ')', ')'])
         self.assertListEqual(brackets, ['('])
+    
+    def test_parse_expression_empty(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('')
+        self.assertListEqual(tokens, [])
+    def test_parse_expression_whitespace(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('    ')
+        self.assertListEqual(tokens, [])
+    def test_parse_expression_int(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('123')
+        self.assertListEqual(tokens, ['123'])
+    def test_parse_expression_float(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('12.3')
+        self.assertListEqual(tokens, ['12.3'])
+    def test_parse_expression_float2(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('.123')
+        self.assertListEqual(tokens, ['.123'])
+    def test_parse_expression_two_decimal_points(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        with self.assertRaises(TwoDecimalPointsError):
+            parser.parse_expression('1.2.3')
+    def test_parse_expression_variable(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('x')
+        self.assertListEqual(tokens, ['x'])
+    def test_parse_expression_multiple_variables(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('xyz')
+        self.assertListEqual(tokens, ['x', ' ', 'y', ' ', 'z'])
+    def test_parse_expression_number_with_spaces(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('500 000 000.000 001')
+        self.assertListEqual(tokens, ['500000000.000001'])
+    def test_parse_expression_variables_with_spaces(self):
+        fd = FunctionalityDatabase()
+        fd.constants_trie.append_key('pie', True)
+        parser = ExpressionParser(fd)
+        tokens = parser.parse_expression('xpi e')
+        self.assertListEqual(tokens, ['x', ' ', 'pi', ' ', 'e'])
+    def test_parse_expression_int_and_variable(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('5x')
+        self.assertListEqual(tokens, ['5', ' ', 'x'])
+    def test_parse_expression_float_with_variable(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('5.2x')
+        self.assertListEqual(tokens, ['5.2', ' ', 'x'])
+    def test_parse_expression_variable_with_int(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        with self.assertRaises(ImplicitMultiplicationError):
+            parser.parse_expression('x2')
+    def test_parse_expression_variable_with_int(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        with self.assertRaises(ImplicitMultiplicationError):
+            parser.parse_expression('x.4')
+    def test_parse_expression_int_and_spaces(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('1   ')
+        self.assertListEqual(tokens, ['1'])
+    def test_parse_expression_float_and_spaces(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('2.4   ')
+        self.assertListEqual(tokens, ['2.4'])
+    def test_parse_expression_variable_and_spaces(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('x   ')
+        self.assertListEqual(tokens, ['x'])
+    def test_parse_expression_operator_and_int(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('+5')
+        self.assertListEqual(tokens, ['+u', '5'])
+    def test_parse_expression_operator_and_float(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('+5.4')
+        self.assertListEqual(tokens, ['+u', '5.4'])
+    def test_parse_expression_operator_and_variable(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('+x')
+        self.assertListEqual(tokens, ['+u', 'x'])
+    def test_parse_expression_ints_and_operator(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('1+2')
+        self.assertListEqual(tokens, ['1', '+', '2'])
+    def test_parse_expression_floats_and_operator(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('1.4+2.5')
+        self.assertListEqual(tokens, ['1.4', '+', '2.5'])
+    def test_parse_expression_variables_and_operator(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('x+y')
+        self.assertListEqual(tokens, ['x', '+', 'y'])
+    def test_parse_expression_ints_and_operator_with_spaces(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression(' 1  + 2 ')
+        self.assertListEqual(tokens, ['1', '+', '2'])
+    def test_parse_expression_floats_and_operator_with_spaces(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression(' 1.2  + 2.3 ')
+        self.assertListEqual(tokens, ['1.2', '+', '2.3'])
+    def test_parse_expression_variabless_and_operator_with_spaces(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression(' x  + t ')
+        self.assertListEqual(tokens, ['x', '+', 't'])
+    def test_parse_expression_multiple_variables_numbers_and_operator(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('xpi+2')
+        self.assertListEqual(tokens, ['x', ' ', 'pi', '+', '2'])
+    def test_parse_expression_multiple_operators(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('1*-2')
+        self.assertListEqual(tokens, ['1', '*', '-u', '2'])
+    def test_parse_expression_long_operator(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('1//2')
+        self.assertListEqual(tokens, ['1', '//', '2'])
+    def test_parse_expression_multiple_operators_with_spaces(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('1 * -2')
+        self.assertListEqual(tokens, ['1', '*', '-u', '2'])
+    def test_parse_expression_in_brackets(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('(1*-2)')
+        self.assertListEqual(tokens, ['(', '1', '*', '-u', '2', ')'])
+    def test_parse_expression_ints_and_brackets(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('2(3+4)')
+        self.assertListEqual(tokens, ['2', ' ', '(', '3', '+', '4', ')'])
+    def test_parse_expression_floats_and_brackets(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('2.3(3.3+4.3)')
+        self.assertListEqual(tokens, ['2.3', ' ', '(', '3.3', '+', '4.3', ')'])
+    def test_parse_expression_variables_and_brackets(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('x(y+z)')
+        self.assertListEqual(tokens, ['x', ' ', '(', 'y', '+', 'z', ')'])
+    def test_parse_expression_function(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('sin(y+z)')
+        self.assertListEqual(tokens, ['sin', '()', '(', 'y', '+', 'z', ')'])
+    def test_parse_expression_variables_functions_and_brackets(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('xsin(y+z)')
+        self.assertListEqual(tokens, ['x', ' ', 'sin', '()', '(', 'y', '+', 'z', ')'])
+    def test_parse_expression_variables_no_function(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('(y+sin)')
+        self.assertListEqual(tokens, ['(', 'y', '+', 's', ' ', 'i', ' ', 'n', ')'])
+    def test_parse_expression_unary_operator_and_brackets(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('+(3+4)')
+        self.assertListEqual(tokens, ['+u', '(', '3', '+', '4', ')'])
+    def test_parse_expression_binary_operator_and_brackets(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('2//(3+4)')
+        self.assertListEqual(tokens, ['2', '//', '(', '3', '+', '4', ')'])
+    def test_parse_expression_multiple_brackets(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('(2-2)(3+4)')
+        self.assertListEqual(tokens, ['(', '2', '-', '2', ')', ' ', '(', '3', '+', '4', ')'])
+    def test_parse_expression_brackets_inside_brackets(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('((2-2+3)+4)')
+        self.assertListEqual(tokens, ['(', '(', '2', '-', '2', '+', '3', ')', '+', '4', ')'])
+    def test_parse_expression_double_brackets(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('((2-2+3+4))')
+        self.assertListEqual(tokens, ['(', '(', '2', '-', '2', '+', '3', '+', '4', ')', ')'])
+    def test_parse_expression_brackets_with_spaces(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression(' ( ( 2 - 2 + 3 ) + 4 ) ')
+        self.assertListEqual(tokens, ['(', '(', '2', '-', '2', '+', '3', ')', '+', '4', ')'])
+    def test_parse_expression_right_bracket_and_int(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        with self.assertRaises(ImplicitMultiplicationError):
+            parser.parse_expression('(3+3)2')
+    def test_parse_expression_right_bracket_and_float(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        with self.assertRaises(ImplicitMultiplicationError):
+            parser.parse_expression('(3+3).2')
+    def test_parse_expression_right_bracket_and_variable(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('(3+3)x')
+        self.assertListEqual(tokens, ['(', '3', '+', '3', ')', ' ', 'x'])
+    def test_parse_expression_right_bracket_and_operator(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('(3+3)+5')
+        self.assertListEqual(tokens, ['(', '3', '+', '3', ')', '+', '5'])
+    def test_parse_expression_right_bracket_and_left_bracket(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        tokens = parser.parse_expression('(3+3)(x)')
+        self.assertListEqual(tokens, ['(', '3', '+', '3', ')', ' ', '(', 'x', ')'])
+    def test_parse_expression_operator_at_the_end(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        with self.assertRaises(MissingOperandError):
+            parser.parse_expression('x*3+')
+    def test_parse_expression_operator_at_the_end_with_spaces(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        with self.assertRaises(MissingOperandError):
+            parser.parse_expression('x*3+  ')
+    def test_parse_expression_unclosed_brackets(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        with self.assertRaises(BracketsMismatchError):
+            parser.parse_expression('(x+y')
+    def test_parse_expression_unclosed_brackets2(self):
+        parser = ExpressionParser(FunctionalityDatabase())
+        with self.assertRaises(BracketsMismatchError):
+            parser.parse_expression('((x+y)  ')
 
 if __name__ == '__main__':
     unittest.main()

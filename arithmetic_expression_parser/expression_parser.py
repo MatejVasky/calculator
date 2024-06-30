@@ -1,6 +1,6 @@
 from typing import List
 from functionality_database import FunctionalityDatabase
-from .exceptions import ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError
+from .exceptions import ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError
 
 NONE = 0
 INT = 1
@@ -22,15 +22,166 @@ class ExpressionParser:
 
         for c in expression:
             if state == NONE:
-                pass
+                if c == ' ':
+                    pass
+                elif self.fd.is_letter(c):
+                    if prev_word != None:
+                        self.process_text(tokens, prev_word, c)
+                        prev_word = None
+                    word += c
+                    state = TEXT
+                elif self.fd.is_digit(c):
+                    if prev_word != None:
+                        self.process_text(tokens, prev_word, c)
+                        prev_word = None
+                    word += c
+                    state = INT
+                elif c == self.fd.decimal_point:
+                    if prev_word != None:
+                        self.process_text(tokens, prev_word, c)
+                        prev_word = None
+                    word += c
+                    state = FLOAT
+                elif self.fd.is_punctuation(c):
+                    if prev_word != None:
+                        self.process_text(tokens, prev_word, c)
+                        prev_word = None
+                    word += c
+                    state = OPERATOR
+                elif self.fd.is_left_bracket(c):
+                    if prev_word != None:
+                        self.process_text(tokens, prev_word, c)
+                        prev_word = None
+                    self.process_left_bracket(tokens, brackets, c)
+                elif self.fd.is_right_bracket(c):
+                    if prev_word != None:
+                        self.process_text(tokens, prev_word, c)
+                        prev_word = None
+                    self.process_right_bracket(tokens, brackets, c)
             elif state == INT:
-                pass
+                if c == ' ':
+                    pass
+                elif self.fd.is_letter(c):
+                    self.process_number(tokens, word)
+                    word = c
+                    state = TEXT
+                elif self.fd.is_digit(c):
+                    word += c
+                elif c == self.fd.decimal_point:
+                    word += c
+                    state = FLOAT
+                elif self.fd.is_punctuation(c):
+                    self.process_number(tokens, word)
+                    word = c
+                    state = OPERATOR
+                elif self.fd.is_left_bracket(c):
+                    self.process_number(tokens, word)
+                    word = ''
+                    self.process_left_bracket(tokens, brackets, c)
+                    state = NONE
+                elif self.fd.is_right_bracket(c):
+                    self.process_number(tokens, word)
+                    word = ''
+                    self.process_right_bracket(tokens, brackets, c)
+                    state = NONE
             elif state == FLOAT:
-                pass
+                if c == ' ':
+                    pass
+                elif self.fd.is_letter(c):
+                    self.process_number(tokens, word)
+                    word = c
+                    state = TEXT
+                elif self.fd.is_digit(c):
+                    word += c
+                elif c == self.fd.decimal_point:
+                    raise TwoDecimalPointsError()
+                elif self.fd.is_punctuation(c):
+                    self.process_number(tokens, word)
+                    word = c
+                    state = OPERATOR
+                elif self.fd.is_left_bracket(c):
+                    self.process_number(tokens, word)
+                    word = ''
+                    self.process_left_bracket(tokens, brackets, c)
+                    state = NONE
+                elif self.fd.is_right_bracket(c):
+                    self.process_number(tokens, word)
+                    word = ''
+                    self.process_right_bracket(tokens, brackets, c)
+                    state = NONE
             elif state == TEXT:
-                pass
+                if c == ' ':
+                    prev_word = word
+                    word = ''
+                    state = NONE
+                elif self.fd.is_letter(c):
+                    word += c
+                elif self.fd.is_digit(c):
+                    raise ImplicitMultiplicationError()
+                elif c == self.fd.decimal_point:
+                    raise ImplicitMultiplicationError()
+                elif self.fd.is_punctuation(c):
+                    self.process_text(tokens, word, c)
+                    word = c
+                    state = OPERATOR
+                elif self.fd.is_left_bracket(c):
+                    self.process_text(tokens, word, c)
+                    word = ''
+                    self.process_left_bracket(tokens, brackets, c)
+                    state = NONE
+                elif self.fd.is_right_bracket(c):
+                    self.process_text(tokens, word, c)
+                    word = ''
+                    self.process_right_bracket(tokens, brackets, c)
+                    state = NONE
             elif state == OPERATOR:
-                pass
+                if c == ' ':
+                    self.process_operator(tokens, word)
+                    word = ''
+                    state = NONE
+                elif self.fd.is_letter(c):
+                    self.process_operator(tokens, word)
+                    word = c
+                    state = TEXT
+                elif self.fd.is_digit(c):
+                    self.process_operator(tokens, word)
+                    word = c
+                    state = INT
+                elif c == self.fd.decimal_point:
+                    self.process_operator(tokens, word)
+                    word = c
+                    state = FLOAT
+                elif self.fd.is_punctuation(c):
+                    word += c
+                elif self.fd.is_left_bracket(c):
+                    self.process_operator(tokens, word)
+                    word = ''
+                    self.process_left_bracket(tokens, brackets, c)
+                    state = NONE
+                elif self.fd.is_right_bracket(c):
+                    self.process_operator(tokens, word)
+                    word = ''
+                    self.process_right_bracket(tokens, brackets, c)
+                    state = NONE
+
+        if state == NONE:
+            if prev_word != None:
+                self.process_text(tokens, prev_word, ' ')
+        elif state == INT:
+            self.process_number(tokens, word)
+        elif state == FLOAT:
+            self.process_number(tokens, word)
+        elif state == TEXT:
+            self.process_text(tokens, word, ' ')
+        elif state == OPERATOR:
+            raise MissingOperandError()
+        
+        if len(tokens) != 0 and self.fd.is_operator(tokens[-1]):
+            raise MissingOperandError()
+        if len(brackets) != 0:
+            raise BracketsMismatchError()
+        
+        return tokens
     
     def process_number(self, tokens : List[str], word : str) -> None:
         """Adds a number (int or float) to tokens"""

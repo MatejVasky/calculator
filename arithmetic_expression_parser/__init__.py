@@ -1,4 +1,4 @@
 from .expression_parser import ExpressionParser
-from .exceptions import ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, InvalidOperatorError, MissingOperandError, UnknownVariableError, UnknownOperatorError
+from .exceptions import ParsingError, ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError
 
-__all__ = ["ExpressionParser", "ImplicitMultiplicationError", "BracketsMismatchError", "EmptyBracketsError", "InvalidOperatorError", "MissingOperandError", "UnknownVariableError", "UnknownOperatorError"]
+__all__ = ["ExpressionParser", "ParsingError", "ImplicitMultiplicationError", "BracketsMismatchError", "EmptyBracketsError", "MissingOperandError", "UnknownVariableError", "UnknownOperatorError", "TwoDecimalPointsError"]

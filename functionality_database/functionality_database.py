@@ -8,6 +8,7 @@ class FunctionalityDatabase:
         self.implicit_operation = ' '
         self.function_aplication_operator = '()'
         self.function_bracket = '('
+        self.decimal_point = '.'
 
         self.constants_trie : TrieNode[bool] = TrieNode()
         self.constants_trie.append_key('pi', True)
@@ -45,7 +46,7 @@ class FunctionalityDatabase:
 
     def is_punctuation(self, c : str) -> bool:
         """Checks if a given character is punctuation"""
-        return c in ['+', '-', '*', '/']
+        return c in ['+', '-', '*', '/', '%']
     
     def is_operator(self, token : str) -> bool:
         """Checks if a given token is an operator"""
