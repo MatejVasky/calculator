@@ -1,5 +1,5 @@
-from arithmetic_expression_parser import ExpressionParser, ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError
-from functionality_database import FunctionalityDatabase
+from arithmetic_expressions.parsing import ExpressionParser, ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError
+from arithmetic_expressions.functionality_database import FunctionalityDatabase
 import unittest
 
 class ParserTest(unittest.TestCase):

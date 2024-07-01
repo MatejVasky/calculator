@@ -1,4 +1,4 @@
-from functionality_database import FunctionalityDatabase
+from arithmetic_expressions.functionality_database import FunctionalityDatabase
 import unittest
 
 class FunctionalityDatabaseTest(unittest.TestCase):

@@ -1,5 +1,5 @@
 from typing import List
-from functionality_database import FunctionalityDatabase
+from arithmetic_expressions.functionality_database import FunctionalityDatabase
 from .exceptions import ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError
 
 NONE = 0
