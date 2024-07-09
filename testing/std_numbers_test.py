@@ -1479,6 +1479,121 @@ class STDNumbersTest(unittest.TestCase):
     def test_complex_decimal_str11(self):
         q = ComplexDecimal(0, 0)
         self.assertEqual(str(q), '0.0')
+    
+    def test_rational_int1(self):
+        q = Rational(1, 1)
+        self.assertEqual(int(q), 1)
+    def test_rational_int2(self):
+        q = Rational(2, 1)
+        self.assertEqual(int(q), 2)
+    def test_rational_int3(self):
+        q = Rational(-1, 1)
+        self.assertEqual(int(q), -1)
+    def test_rational_int4(self):
+        q = Rational(-2, 1)
+        self.assertEqual(int(q), -2)
+    def test_rational_int5(self):
+        q = Rational(0, 1)
+        self.assertEqual(int(q), 0)
+    def test_rational_int6(self):
+        q = Rational(5, 3)
+        with self.assertRaises(ValueError):
+            int(q)
+    def test_rational_int7(self):
+        q = Rational(-5, 10)
+        with self.assertRaises(ValueError):
+            int(q)
+
+    def test_complex_rational_int1(self):
+        q = ComplexRational(1, 1, 0, 1)
+        self.assertEqual(int(q), 1)
+    def test_complex_rational_int2(self):
+        q = ComplexRational(2, 1, 0, 1)
+        self.assertEqual(int(q), 2)
+    def test_complex_rational_int3(self):
+        q = ComplexRational(-1, 1, 0, 1)
+        self.assertEqual(int(q), -1)
+    def test_complex_rational_int4(self):
+        q = ComplexRational(-2, 1, 0, 1)
+        self.assertEqual(int(q), -2)
+    def test_complex_rational_int5(self):
+        q = ComplexRational(5, 3, 0, 1)
+        with self.assertRaises(ValueError):
+            int(q)
+    def test_complex_rational_int6(self):
+        q = ComplexRational(-5, 10, 0, 1)
+        with self.assertRaises(ValueError):
+            int(q)
+    def test_complex_rational_int7(self):
+        q = ComplexRational(1, 1, 1, 1)
+        with self.assertRaises(ValueError):
+            int(q)
+    
+    def test_rational_float1(self):
+        q = Rational(1, 1)
+        self.assertEqual(float(q), 1)
+    def test_rational_float2(self):
+        q = Rational(1, 2)
+        self.assertEqual(float(q), 0.5)
+    def test_rational_float3(self):
+        q = Rational(-1, 1)
+        self.assertEqual(float(q), -1)
+    def test_rational_float4(self):
+        q = Rational(-1, 2)
+        self.assertEqual(float(q), -0.5)
+    def test_rational_float5(self):
+        q = Rational(0, 1)
+        self.assertEqual(float(q), 0)
+
+    def test_complex_rational_float1(self):
+        q = ComplexRational(1, 1, 0, 1)
+        self.assertEqual(float(q), 1)
+    def test_complex_rational_float2(self):
+        q = ComplexRational(1, 2, 0, 1)
+        self.assertEqual(float(q), 0.5)
+    def test_complex_rational_float3(self):
+        q = ComplexRational(-1, 1, 0, 1)
+        self.assertEqual(float(q), -1)
+    def test_complex_rational_float4(self):
+        q = ComplexRational(-1, 2, 0, 1)
+        self.assertEqual(float(q), -0.5)
+    def test_complex_rational_float7(self):
+        q = ComplexRational(1, 1, 1, 1)
+        with self.assertRaises(ValueError):
+            float(q)
+    
+    def test_decimal_float1(self):
+        q = Decimal(1)
+        self.assertEqual(float(q), 1)
+    def test_decimal_float2(self):
+        q = Decimal(0.5)
+        self.assertEqual(float(q), 0.5)
+    def test_decimal_float3(self):
+        q = Decimal(-1)
+        self.assertEqual(float(q), -1)
+    def test_decimal_float4(self):
+        q = Decimal(-0.5)
+        self.assertEqual(float(q), -0.5)
+    def test_decimal_float5(self):
+        q = Decimal(0)
+        self.assertEqual(float(q), 0)
+
+    def test_complex_decimal_float1(self):
+        q = ComplexDecimal(1, 0)
+        self.assertEqual(float(q), 1)
+    def test_complex_decimal_float2(self):
+        q = ComplexDecimal(0.5, 0)
+        self.assertEqual(float(q), 0.5)
+    def test_complex_decimal_float3(self):
+        q = ComplexDecimal(-1, 0)
+        self.assertEqual(float(q), -1)
+    def test_complex_decimal_float4(self):
+        q = ComplexDecimal(-0.5, 0)
+        self.assertEqual(float(q), -0.5)
+    def test_complex_decimal_float7(self):
+        q = ComplexDecimal(1, 1)
+        with self.assertRaises(ValueError):
+            float(q)
 
 if __name__ == '__main__':
     unittest.main()

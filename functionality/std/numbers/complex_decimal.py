@@ -155,6 +155,11 @@ class ComplexDecimal(ComplexNumber):
                 return f"{self.a} + {self.b}i"
             else:
                 return f"{self.a} - {-self.b}i"
+    
+    def __float__(self) -> float:
+        if not self.is_real():
+            raise ValueError(f"{self} is not real")
+        return self.a
         
 from .rational import Rational
 from .complex_rational import ComplexRational

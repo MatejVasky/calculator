@@ -2,7 +2,7 @@ from datastructures import TrieNode
 
 class FunctionalityDatabase:
     def __init__(self):
-        self.operations = {'+': None, '-': None, '*': None, '/': None, '//': None, '%': None, '+u': None, '-u': None, ' ': None, '()': None}
+        self.operations = {'+': None, '-': None, '*': None, '/': None, '//': None, '%': None, '+u': None, '-u': None, ' ': None, ',': None, '()': None}
         self.left_brackets = {'(': None, '[': None}
         self.right_brackets = {')': '(', ']': '['}
         self.implicit_operation = ' '
@@ -30,6 +30,7 @@ class FunctionalityDatabase:
         self.bin_operators_trie.append_key('/', '/')
         self.bin_operators_trie.append_key('//', '//')
         self.bin_operators_trie.append_key('%', '%')
+        self.bin_operators_trie.append_key(',', ',')
 
         self.pre_un_operators_trie : TrieNode[str] = TrieNode()
         self.pre_un_operators_trie.append_key('+', '+u')

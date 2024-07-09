@@ -182,6 +182,16 @@ class ComplexRational(ComplexNumber):
                 else:
                     s, i = '-', f'({-self.c}/{self.d})i'
             return f"{r} {s} {i}"
+        
+    def __int__(self) -> int:
+        if not self.is_int():
+            raise ValueError(f"{self} is not an int")
+        return self.a
+
+    def __float__(self) -> float:
+        if not self.is_real():
+            raise ValueError(f"{self} is not real")
+        return self.a / self.b
 
 from .rational import Rational
 from .decimal import Decimal

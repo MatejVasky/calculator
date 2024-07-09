@@ -142,6 +142,13 @@ class Rational(ComplexNumber):
         else:
             return f"{self.a}/{self.b}"
 
+    def __int__(self) -> int:
+        if not self.is_int():
+            raise ValueError(f"{self} is not an int")
+        return self.a
+    
+    def __float__(self) -> float:
+        return self.a / self.b
 
 from .complex_rational import ComplexRational
 from .decimal import Decimal

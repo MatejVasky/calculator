@@ -129,6 +129,9 @@ class Decimal(ComplexNumber):
     
     def __str__(self) -> str:
         return str(self.val)
+    
+    def __float__(self) -> float:
+        return self.val
 
 from .rational import Rational
 from .complex_rational import ComplexRational
