@@ -28,6 +28,17 @@ class TrieNode(Generic[T]):
             raise KeyError("Trie key must be of length 1")
         self.__children[c] = node
     
+    def __contains__(self, key : str) -> None:
+        """Returns True, if the trie contains key"""
+        if not isinstance(key, str):
+            raise TypeError("Trie key must be of type str")
+        node = self
+        for c in key:
+            node = node[c]
+            if not node:
+                return False
+        return node.value != None
+    
     def append_key(self, key : str, val : T) -> None:
         """Adds key to the trie and sets its value to val"""
         if not isinstance(key, str):

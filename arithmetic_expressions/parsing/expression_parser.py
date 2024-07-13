@@ -1,6 +1,6 @@
 from typing import List
 from arithmetic_expressions.functionality_database import FunctionalityDatabase
-from .exceptions import ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError
+from .exceptions import ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError, IsolatedDecimalPointError
 
 NONE = 0
 INT = 1
@@ -187,6 +187,8 @@ class ExpressionParser:
         """Adds a number (int or float) to tokens"""
         if self.needs_operation(tokens):
             raise ImplicitMultiplicationError()
+        if word == self.fd.decimal_point:
+            raise IsolatedDecimalPointError()
         tokens.append(word)
 
     def process_text(self, tokens : List[str], word : str, next_char : str) -> None:
@@ -197,8 +199,9 @@ class ExpressionParser:
 
         # Find function name, if applicable
         if next_char == self.fd.function_bracket:
-            func_name_start = self.fd.functions_trie.find_longest_match(word, start=len(word) - 1, end=-1, step=-1)[0] + 1
-            func_name = word[func_name_start:] if (func_name_start < len(word)) else None
+            func_name_start, func_name = self.fd.functions_trie.find_longest_match(word, start=len(word) - 1, end=-1, step=-1)
+            func_name_start += 1
+            # func_name = word[func_name_start:] if (func_name_start < len(word)) else None
         else:
             func_name_start = len(word)
             func_name = None
@@ -207,12 +210,12 @@ class ExpressionParser:
         token_start = 0
         while token_start < func_name_start:
             # Find variable name
-            token_end, _ = self.fd.constants_trie.find_longest_match(word, start=token_start, end=func_name_start)
+            token_end, token = self.fd.constants_trie.find_longest_match(word, start=token_start, end=func_name_start)
             # If variable not found
             if token_start == token_end:
                 raise UnknownVariableError(word)
             # Add variable and implicit multiplication operator, if needed
-            tokens.append(word[token_start:token_end])
+            tokens.append(token)
             if token_end < len(word):
                 tokens.append(self.fd.implicit_operation)
             token_start = token_end
@@ -220,7 +223,7 @@ class ExpressionParser:
         # Add the function from the end, if necessary
         if func_name != None:
             tokens.append(func_name)
-            tokens.append(self.fd.function_aplication_operator)
+            tokens.append(self.fd.function_application_operator)
 
     def process_operator(self, tokens : List[str], word : str) -> None:
         """Splits sequence of punctuation into individual operator tokens and adds them to tokens"""

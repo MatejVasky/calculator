@@ -8,6 +8,9 @@ class FunctionTest(unittest.TestCase):
         f = Function('f', test_function)
         self.assertEqual(f.name, 'f')
         self.assertEqual(f._Function__evaluate, test_function)
+    def test_function_init_wrong_type(self):
+        with self.assertRaises(TypeError):
+            Function(1, test_function)
     
     def test_function_evaluate_no_params(self):
         f = Function('f', test_function)

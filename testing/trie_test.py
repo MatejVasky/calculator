@@ -17,10 +17,33 @@ class TrieTest(unittest.TestCase):
     def test_getitem_nonexistent(self):
         root = TrieNode(3)
         self.assertEqual(root['a'], None)
+
     def test_append(self):
         root = TrieNode()
         root.append_key('key', 5)
         self.assertEqual(root['k']['e']['y'].value, 5)
+    
+    def test_contains_true(self):
+        root = TrieNode()
+        root.append_key('key', 1)
+        self.assertTrue('key' in root)
+    def test_contains_false1(self):
+        root = TrieNode()
+        root.append_key('key', 1)
+        self.assertFalse('keys' in root)
+    def test_contains_false2(self):
+        root = TrieNode()
+        root.append_key('keys', 1)
+        self.assertFalse('key' in root)
+    def test_contains_false3(self):
+        root = TrieNode()
+        root.append_key('key', 1)
+        self.assertFalse('ket' in root)
+    def test_contains_wrong_type(self):
+        root = TrieNode()
+        root.append_key('key', 1)
+        with self.assertRaises(TypeError):
+            1 in root
 
     def test_find_longest_match_empty_trie(self):
         root = TrieNode()

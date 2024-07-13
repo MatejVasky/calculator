@@ -4,12 +4,27 @@ from functionality.std import Rational
 import unittest
 
 class OperationTest(unittest.TestCase):
-    def test_binary_operation_init(self):
+    def test_binary_operation_init1(self):
         addition = BinaryOperation(1, '+', '+b', test_addition)
         self.assertEqual(addition.priority, 1)
         self.assertEqual(addition.symbol, '+')
         self.assertEqual(addition.token, '+b')
         self.assertEqual(addition._BinaryOperation__evaluate, test_addition)
+    def test_binary_operation_init2(self):
+        op = BinaryOperation(1, None, '+b', test_addition)
+        self.assertEqual(op.priority, 1)
+        self.assertEqual(op.symbol, None)
+        self.assertEqual(op.token, '+b')
+        self.assertEqual(op._BinaryOperation__evaluate, test_addition)
+    def test_binary_operation_init_wrong_type1(self):
+        with self.assertRaises(TypeError):
+            BinaryOperation('1', '+', '+b', test_addition)
+    def test_binary_operation_init_wrong_type2(self):
+        with self.assertRaises(TypeError):
+            BinaryOperation(1, 2, '+b', test_addition)
+    def test_binary_operation_init_wrong_type3(self):
+        with self.assertRaises(TypeError):
+            BinaryOperation(1, '+', 3, test_addition)
     
     def test_binary_operation_evaluate(self):
         addition = BinaryOperation(1, '+', '+b', test_addition)
@@ -39,12 +54,27 @@ class OperationTest(unittest.TestCase):
         with self.assertRaises(FunctionOrOperationEvaluationException):
             addition.evaluate(Function('f', test_function), Rational(1, 5))
     
-    def test_prefix_unary_operation_init(self):
+    def test_prefix_unary_operation_init1(self):
         neg = PrefixUnaryOperation(1, '-', '-u', test_neg)
         self.assertEqual(neg.priority, 1)
         self.assertEqual(neg.symbol, '-')
         self.assertEqual(neg.token, '-u')
         self.assertEqual(neg._PrefixUnaryOperation__evaluate, test_neg)
+    def test_prefix_unary_operation_init2(self):
+        op = PrefixUnaryOperation(1, None, '-u', test_neg)
+        self.assertEqual(op.priority, 1)
+        self.assertEqual(op.symbol, None)
+        self.assertEqual(op.token, '-u')
+        self.assertEqual(op._PrefixUnaryOperation__evaluate, test_neg)
+    def test_prefix_unary_operation_init_wrong_type1(self):
+        with self.assertRaises(TypeError):
+            PrefixUnaryOperation('1', '-', '-u', test_neg)
+    def test_prefix_unary_operation_init_wrong_type2(self):
+        with self.assertRaises(TypeError):
+            PrefixUnaryOperation(1, 2, '-u', test_neg)
+    def test_prefix_unary_operation_init_wrong_type3(self):
+        with self.assertRaises(TypeError):
+            PrefixUnaryOperation(1, '-', 3, test_neg)
     
     def test_prefix_unary_operation_evaluate(self):
         neg = PrefixUnaryOperation(1, '-', '-u', test_neg)

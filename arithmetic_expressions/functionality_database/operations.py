@@ -1,18 +1,24 @@
 from arithmetic_expressions.evaluation import EvaluationError, FunctionOrOperationEvaluationException
-from typing import Callable
+from typing import Callable, Optional
 from .value import Value
 
 class Operation():
     """A base class for operations"""
-    def __init__(self, priority : int, symbol : str, token : str):
+    def __init__(self, priority : int, symbol : Optional[str], token : str):
         """A constructor for the Operation class"""
+        if not isinstance(priority, int):
+            raise TypeError("name must be of type int")
+        if not isinstance(symbol, str) and symbol != None:
+            raise TypeError("symbol must be of type str")
+        if not isinstance(token, str):
+            raise TypeError("token must be of type str")
         self.priority = priority
         self.symbol = symbol
         self.token = token
 
 class BinaryOperation(Operation):
     """A base class for binary operations"""
-    def __init__(self, priority : int, symbol : str, token : str, evaluate : Callable[[Value, Value], Value]):
+    def __init__(self, priority : int, symbol : Optional[str], token : str, evaluate : Callable[[Value, Value], Value]):
         """A constructor for the BinaryOperation class"""
         super().__init__(priority, symbol, token)
         self.__evaluate = evaluate
@@ -33,7 +39,7 @@ class BinaryOperation(Operation):
 
 class PrefixUnaryOperation(Operation):
     """A base class for prefix unary operations"""
-    def __init__(self, priority : int, symbol : str, token : str, evaluate : Callable[[Value], Value]):
+    def __init__(self, priority : int, symbol : Optional[str], token : str, evaluate : Callable[[Value], Value]):
         """A constructor for the PrefixUnaryOperation class"""
         super().__init__(priority, symbol, token)
         self.__evaluate = evaluate

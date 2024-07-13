@@ -1,4 +1,5 @@
 from arithmetic_expressions.functionality_database import Variable, unpack_variables
+from arithmetic_expressions.evaluation import UndefinedError
 from functionality.std import Rational
 import unittest
 
@@ -7,9 +8,16 @@ class VariableTest(unittest.TestCase):
         v = Variable('x', Rational(4, 5))
         self.assertEqual(v.name, 'x')
         self.assertEqual(v.get_value(), Rational(4, 5))
-    def test_init_error(self):
+    def test_init_error1(self):
+        with self.assertRaises(TypeError):
+            Variable(5, Rational(1, 5))
+    def test_init_error2(self):
         with self.assertRaises(TypeError):
             Variable('x', 45)
+    def test_value_none(self):
+        x = Variable('x', None)
+        with self.assertRaises(UndefinedError):
+            x.get_value()
     def test_set(self):
         v = Variable('x', Rational(4, 5))
         v.set_value(Rational(3, 5))

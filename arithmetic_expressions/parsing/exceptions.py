@@ -29,3 +29,7 @@ class UnknownOperatorError(ParsingError):
 class TwoDecimalPointsError(ParsingError):
     def __init__(self):
         super().__init__("Number cannot contain two decimal points")
+
+class IsolatedDecimalPointError(ParsingError):
+    def __init__(self):
+        super().__init__("A decimal point may not occur without digits surrounding it")

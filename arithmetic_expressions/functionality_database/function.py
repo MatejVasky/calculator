@@ -7,6 +7,8 @@ class Function(Value):
     """An abstract base class for functions"""
     def __init__(self, name : str, evaluate : Callable[..., Value]):
         """A constructor for Function"""
+        if not isinstance(name, str):
+            raise TypeError("name must be of type str")
         self.name = name
         self.__evaluate = evaluate
     
