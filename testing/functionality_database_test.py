@@ -549,6 +549,25 @@ class FunctionalityDatabaseTest(unittest.TestCase):
     def test_brackets_match_not_a_bracket(self):
         fd = create_fd()
         self.assertFalse(fd.brackets_match('(', '.'))
+    
+    def test_is_int_true(self):
+        fd = create_fd()
+        self.assertTrue(fd.is_int('123'))
+    def test_is_int_false1(self):
+        fd = create_fd()
+        self.assertTrue(fd.is_decimal('.123'))
+    def test_is_int_false2(self):
+        fd = create_fd()
+        self.assertTrue(fd.is_decimal('12.3'))
+    def test_is_float_true1(self):
+        fd = create_fd()
+        self.assertTrue(fd.is_decimal('1.23'))
+    def test_is_float_true2(self):
+        fd = create_fd()
+        self.assertTrue(fd.is_decimal('.123'))
+    def test_is_float_false1(self):
+        fd = create_fd()
+        self.assertFalse(fd.is_decimal('123'))
 
 def create_fd() -> FunctionalityDatabase:
     fd = FunctionalityDatabase(' ', '()', '(', '.', LETTERS, DIGITS, PUNCTUATION)

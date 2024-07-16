@@ -1,5 +1,5 @@
 from arithmetic_expressions.functionality_database import Value, Variable, Function, unpack_variables, BinaryOperation, PrefixUnaryOperation
-from arithmetic_expressions.evaluation import EvaluationError, FunctionOrOperationEvaluationException
+from arithmetic_expressions.functionality_database.exceptions import EvaluationError, FunctionOrOperationEvaluationException
 from functionality.std import Rational
 import unittest
 

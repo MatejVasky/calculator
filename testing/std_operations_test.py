@@ -1,5 +1,5 @@
 from functionality.std import Rational, ComplexRational, Decimal, ComplexDecimal, add, subtract, multiply, divide, floordivide, modulo, add_parameter, evaluate_function, pos, neg
-from arithmetic_expressions.evaluation import UndefinedError, FunctionOrOperationEvaluationException
+from arithmetic_expressions.functionality_database.exceptions import UndefinedError, FunctionOrOperationEvaluationException
 from arithmetic_expressions.functionality_database import Variable, Parameters, Function
 import unittest
 from math import sqrt

@@ -1,5 +1,5 @@
 from functionality.std import Rational, ComplexRational, Decimal, ComplexDecimal, add, subtract, multiply, divide, floordivide, modulo, pos, neg, sin, cos, exp, log
-from arithmetic_expressions.evaluation import UndefinedError
+from arithmetic_expressions.functionality_database.exceptions import UndefinedError
 from arithmetic_expressions.functionality_database import Variable
 import unittest
 import math

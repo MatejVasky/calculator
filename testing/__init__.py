@@ -8,5 +8,7 @@ from .variable_test import VariableTest
 from .parameters_test import ParametersTest
 from .function_test import FunctionTest
 from .operation_test import OperationTest
+from .evaluator_test import EvaluatorTest
+from .full_evaluation_test import FullEvaluationTest
 
-__all__ = ["FunctionalityDatabaseTest", "ParserTest", "TrieTest", "DatastructuresFunctionsTest", "STDNumbersTest", "STDOperationsTest", "VariableTest", "ParametersTest", "FunctionTest", "OperationTest"]
+__all__ = ["FunctionalityDatabaseTest", "ParserTest", "TrieTest", "DatastructuresFunctionsTest", "STDNumbersTest", "STDOperationsTest", "VariableTest", "ParametersTest", "FunctionTest", "OperationTest", "EvaluatorTest", "FullEvaluationTest"]

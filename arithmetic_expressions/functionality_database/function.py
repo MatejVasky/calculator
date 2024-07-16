@@ -1,7 +1,7 @@
 from typing import Callable
-from arithmetic_expressions.evaluation import EvaluationError, FunctionOrOperationEvaluationException
 from .value import Value
 from .parameters import Parameters
+from .exceptions import EvaluationError, FunctionOrOperationEvaluationException
 
 class Function(Value):
     """An abstract base class for functions"""

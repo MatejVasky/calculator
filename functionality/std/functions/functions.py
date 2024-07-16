@@ -1,5 +1,5 @@
 from arithmetic_expressions.functionality_database import Value, unpack_variables
-from arithmetic_expressions.evaluation import UndefinedError
+from arithmetic_expressions.functionality_database.exceptions import UndefinedError
 from ..numbers import ComplexNumber, Decimal
 import math
 

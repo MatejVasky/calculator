@@ -1,6 +1,6 @@
 from typing import Optional
-from arithmetic_expressions.evaluation import UndefinedError
 from .value import Value
+from .exceptions import UndefinedError
 
 class Variable(Value):
     """A class for variables"""

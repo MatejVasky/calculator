@@ -172,17 +172,33 @@ class FunctionalityDatabase:
         """Checks if a given character is punctuation"""
         return c in self.punctuation
     
-    def is_operator(self, token : str) -> bool:
-        """Checks if a given token is an operator"""
-        return token in self.operations
-    
     def is_left_bracket(self, c : str) -> bool:
-        """Checks if a given character is a left bracket"""
+        """Checks if a given character/token is a left bracket"""
         return c in self.left_brackets
     
     def is_right_bracket(self, c : str) -> bool:
-        """Checks if a given character is a right bracket"""
+        """Checks if a given character/token is a right bracket"""
         return c in self.right_brackets
+    
+    def is_int(self, token : str) -> bool:
+        """Checks if a given token is an integer. Assumes that token is a valid token"""
+        if not isinstance(token, str):
+            return False
+        return token[0] in self.digits and not self.decimal_point in token
+    
+    def is_decimal(self, token : str) -> bool:
+        """Checks if a given token is a decimal number. Assumes that token is a valid token"""
+        if not isinstance(token, str):
+            return False
+        return (token[0] in self.digits or token[0] == self.decimal_point) and self.decimal_point in token
+    
+    def is_constant(self, token : str) -> bool:
+        """Checks if a given token is a constant"""
+        return token in self.constants
+
+    def is_operator(self, token : str) -> bool:
+        """Checks if a given token is an operator"""
+        return token in self.operations
     
     def brackets_match(self, left : str, right : str) -> bool:
         """Checks if brackets match. Returns False if either parameter is not a bracket"""

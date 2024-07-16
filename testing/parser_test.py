@@ -1,5 +1,6 @@
-from arithmetic_expressions.parsing import ExpressionParser, ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError, IsolatedDecimalPointError
+from arithmetic_expressions.parsing import ExpressionParser
 from arithmetic_expressions.functionality_database import FunctionalityDatabase, BinaryOperation, PrefixUnaryOperation, Function
+from arithmetic_expressions.functionality_database.exceptions import ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError, IsolatedDecimalPointError
 from functionality.std import Rational
 import unittest
 

@@ -1,6 +1,6 @@
 from typing import List
 from arithmetic_expressions.functionality_database import FunctionalityDatabase
-from .exceptions import ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError, IsolatedDecimalPointError
+from arithmetic_expressions.functionality_database.exceptions import ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError, IsolatedDecimalPointError
 
 NONE = 0
 INT = 1

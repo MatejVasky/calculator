@@ -1,17 +1,19 @@
-from arithmetic_expressions.evaluation import EvaluationError, FunctionOrOperationEvaluationException
 from typing import Callable, Optional
 from .value import Value
+from .exceptions import EvaluationError, FunctionOrOperationEvaluationException
 
 class Operation():
     """A base class for operations"""
     def __init__(self, priority : int, symbol : Optional[str], token : str):
         """A constructor for the Operation class"""
         if not isinstance(priority, int):
-            raise TypeError("name must be of type int")
+            raise TypeError("priority must be of type int")
         if not isinstance(symbol, str) and symbol != None:
             raise TypeError("symbol must be of type str")
         if not isinstance(token, str):
             raise TypeError("token must be of type str")
+        if priority < 0:
+            raise ValueError("priority must be non-negative")
         self.priority = priority
         self.symbol = symbol
         self.token = token
