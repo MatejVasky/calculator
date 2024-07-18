@@ -1,0 +1,141 @@
+{
+    "implicit_operation": " ",
+    "function_application_operator": "()",
+    "function_bracket": "(",
+    "decimal_point": ".",
+    "letters": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
+    "digits": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+    "punctuation": ["+", "-", "*", "/", "%", ","],
+
+    "packages": [
+        "std"
+    ],
+
+    "binary_operations": [
+        {
+            "priority": 1,
+            "symbol": "+",
+            "token": "+",
+            "package": "std",
+            "function": "add"
+        },
+        {
+            "priority": 1,
+            "symbol": "-",
+            "token": "-",
+            "package": "std",
+            "function": "subtract"
+        },
+        {
+            "priority": 2,
+            "symbol": "*",
+            "token": "*",
+            "package": "std",
+            "function": "multiply"
+        },
+        {
+            "priority": 2,
+            "symbol": "/",
+            "token": "/",
+            "package": "std",
+            "function": "divide"
+        },
+        {
+            "priority": 2,
+            "symbol": "//",
+            "token": "//",
+            "package": "std",
+            "function": "floordivide"
+        },
+        {
+            "priority": 2,
+            "symbol": "%",
+            "token": "%",
+            "package": "std",
+            "function": "modulo"
+        },
+        {
+            "priority": 2,
+            "symbol": null,
+            "token": " ",
+            "package": "std",
+            "function": "multiply"
+        },
+        {
+            "priority": 0,
+            "symbol": ",",
+            "token": ",",
+            "package": "std",
+            "function": "add_parameter"
+        },
+        {
+            "priority": 3,
+            "symbol": null,
+            "token": "()",
+            "package": "std",
+            "function": "evaluate_function"
+        }
+    ],
+
+    "prefix_unary_operations": [
+        {
+            "priority": 1,
+            "symbol": "+",
+            "token": "+u",
+            "package": "std",
+            "function": "pos"
+        },
+        {
+            "priority": 1,
+            "symbol": "-",
+            "token": "-u",
+            "package": "std",
+            "function": "neg"
+        }
+    ],
+
+    "brackets": [
+        {
+            "left": "(",
+            "right": ")"
+        }
+    ],
+
+    "constants": [
+        {
+            "name": "pi",
+            "package": "std",
+            "value": "pi"
+        },
+        {
+            "name": "i",
+            "package": "std",
+            "value": "i"
+        }
+    ],
+
+    "variables": ["a", "b", "c", "d", "e", "f", "g", "h", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
+
+    "functions": [
+        {
+            "name": "sin",
+            "package": "std",
+            "function": "sin"
+        },
+        {
+            "name": "cos",
+            "package": "std",
+            "function": "cos"
+        },
+        {
+            "name": "exp",
+            "package": "std",
+            "function": "exp"
+        },
+        {
+            "name": "log",
+            "package": "std",
+            "function": "log"
+        }
+    ]
+}
