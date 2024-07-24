@@ -14,6 +14,9 @@ class ExpressionParser:
 
     def parse_expression(self, expression : str) -> List[str]:
         """Splits a given arithmetic expression into tokens"""
+        if not isinstance(expression, str):
+            raise TypeError("expression must be of type str")
+
         state = NONE
         word = ''
         prev_word = None

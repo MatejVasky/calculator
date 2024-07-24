@@ -1,6 +1,6 @@
 from typing import Callable, Optional
 from .value import Value
-from .exceptions import EvaluationError, FunctionOrOperationEvaluationException
+from .exceptions import EvaluationError, FunctionOrOperationEvaluationError
 
 class Operation():
     """A base class for operations"""
@@ -35,7 +35,7 @@ class BinaryOperation(Operation):
             if isinstance(e, EvaluationError):
                 raise e
             else:
-                raise FunctionOrOperationEvaluationException(e)
+                raise FunctionOrOperationEvaluationError(e)
         else:
             return res
 
@@ -56,6 +56,6 @@ class PrefixUnaryOperation(Operation):
             if isinstance(e, EvaluationError):
                 raise e
             else:
-                raise FunctionOrOperationEvaluationException(e)
+                raise FunctionOrOperationEvaluationError(e)
         else:
             return res

@@ -1,5 +1,5 @@
 from arithmetic_expressions.functionality_database import Value, Variable, Function, unpack_variables, BinaryOperation, PrefixUnaryOperation
-from arithmetic_expressions.functionality_database.exceptions import EvaluationError, FunctionOrOperationEvaluationException
+from arithmetic_expressions.functionality_database.exceptions import EvaluationError, FunctionOrOperationEvaluationError
 from functionality.std import Rational
 import unittest
 
@@ -51,7 +51,7 @@ class OperationTest(unittest.TestCase):
             assignment.evaluate(Rational(1, 3), Rational(2, 5))
     def test_binary_operation_evaluate_other_error_handling(self):
         addition = BinaryOperation(1, '+', '+b', test_addition)
-        with self.assertRaises(FunctionOrOperationEvaluationException):
+        with self.assertRaises(FunctionOrOperationEvaluationError):
             addition.evaluate(Function('f', test_function), Rational(1, 5))
     
     def test_prefix_unary_operation_init1(self):
@@ -97,7 +97,7 @@ class OperationTest(unittest.TestCase):
             increment.evaluate(Rational(1, 3))
     def test_prefix_unary_operation_evaluate_other_error_handling(self):
         neg = PrefixUnaryOperation(1, '-', '-u', test_neg)
-        with self.assertRaises(FunctionOrOperationEvaluationException):
+        with self.assertRaises(FunctionOrOperationEvaluationError):
             neg.evaluate(Function('f', test_function))
     
 @unpack_variables

@@ -495,7 +495,7 @@ DIGITS = set([str(i) for i in range(10)])
 PUNCTUATION = set(['+', '-', '*', '/', '%', ','])
 
 def create_fd() -> FunctionalityDatabase:
-    fd = FunctionalityDatabase(' ', '()', '(', '.', LETTERS, DIGITS, PUNCTUATION)
+    fd = FunctionalityDatabase(' ', '()', '(', '.', LETTERS, DIGITS, PUNCTUATION, None, None)
 
     fd.register_operation(BinaryOperation(1, '+', '+', None))
     fd.register_operation(BinaryOperation(1, '-', '-', None))

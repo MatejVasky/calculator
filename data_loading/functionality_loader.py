@@ -3,31 +3,46 @@ from arithmetic_expressions.functionality_database import FunctionalityDatabase,
 from io import TextIOBase
 import json
 import importlib
+from .exceptions import LoadingException
 
 def load_functionality(stream : TextIOBase) -> FunctionalityDatabase:
     """Creates a functionality database using data from stream"""
-    data = json.load(stream)
+    try:
+        data = json.load(stream)
+        
+        packages = load_packages(data["packages"])
+
+        implicit_operation = data["implicit_operation"]
+        function_application_operator = data["function_application_operator"]
+        function_bracket = data["function_bracket"]
+        decimal_point = data["decimal_point"]
+
+        letters = set(data["letters"])
+        digits = set(data["digits"])
+        punctuation = set(data["punctuation"])
+
+        parse_int = getattr(packages[data["int_parser"]["package"]], data["int_parser"]["function"])
+        parse_decimal = getattr(packages[data["decimal_parser"]["package"]], data["decimal_parser"]["function"])
+
+        fd = FunctionalityDatabase(implicit_operation, function_application_operator, function_bracket, decimal_point, letters, digits, punctuation, parse_int, parse_decimal)
+
+        if "binary_operations" in data:
+            load_binary_operations(fd, packages, data["binary_operations"])
+        if "prefix_unary_operations" in data:
+            load_prefix_unary_operations(fd, packages, data["prefix_unary_operations"])
+        if "brackets" in data:
+            load_brackets(fd, packages, data["brackets"])
+        if "constants" in data:
+            load_constants(fd, packages, data["constants"])
+        if "variables" in data:
+            load_variables(fd, packages, data["variables"])
+        if "functions" in data:
+            load_functions(fd, packages, data["functions"])
+        
+        return fd
     
-    implicit_operation = data["implicit_operation"]
-    function_application_operator = data["function_application_operator"]
-    function_bracket = data["function_bracket"]
-    decimal_point = data["decimal_point"]
-
-    letters = set(data["letters"])
-    digits = set(data["digits"])
-    punctuation = set(data["punctuation"])
-
-    fd = FunctionalityDatabase(implicit_operation, function_application_operator, function_bracket, decimal_point, letters, digits, punctuation)
-
-    packages = load_packages(data["packages"])
-    load_binary_operations(fd, packages, data["binary_operations"])
-    load_prefix_unary_operations(fd, packages, data["prefix_unary_operations"])
-    load_brackets(fd, packages, data["brackets"])
-    load_constants(fd, packages, data["constants"])
-    load_variables(fd, packages, data["variables"])
-    load_functions(fd, packages, data["functions"])
-    
-    return fd
+    except Exception:
+        raise LoadingException("failed to load functionality")
 
 def load_packages(package_names) -> dict[str, ModuleType]:
     packages = {}

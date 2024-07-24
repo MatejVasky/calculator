@@ -1,5 +1,5 @@
 from arithmetic_expressions.functionality_database import Function, Parameters, Variable, unpack_variables
-from arithmetic_expressions.functionality_database.exceptions import EvaluationError, FunctionOrOperationEvaluationException
+from arithmetic_expressions.functionality_database.exceptions import EvaluationError, FunctionOrOperationEvaluationError
 from functionality.std import Rational
 import unittest
 
@@ -41,7 +41,7 @@ class FunctionTest(unittest.TestCase):
             f.evaluate(Parameters())
     def test_function_evaluate_other_error_handling(self):
         f = Function('f', test_function4)
-        with self.assertRaises(FunctionOrOperationEvaluationException):
+        with self.assertRaises(FunctionOrOperationEvaluationError):
             f.evaluate(Parameters())
     
 

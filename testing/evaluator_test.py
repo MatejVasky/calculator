@@ -7,23 +7,6 @@ import functionality.std
 import math
 
 class EvaluatorTest(unittest.TestCase):
-    def test_parse_int1(self):
-        evaluator = ExpressionEvaluator(create_fd())
-        self.assertEqual(evaluator._ExpressionEvaluator__parse_int('123'), Rational(123, 1))
-    def test_parse_int2(self):
-        evaluator = ExpressionEvaluator(create_fd())
-        self.assertEqual(evaluator._ExpressionEvaluator__parse_int('0'), Rational(0, 1))
-    
-    def test_parse_decimal1(self):
-        evaluator = ExpressionEvaluator(create_fd())
-        self.assertEqual(evaluator._ExpressionEvaluator__parse_decimal('12.5'), Decimal(12.5))
-    def test_parse_decimal2(self):
-        evaluator = ExpressionEvaluator(create_fd())
-        self.assertEqual(evaluator._ExpressionEvaluator__parse_decimal('.5'), Decimal(0.5))
-    def test_parse_decimal3(self):
-        evaluator = ExpressionEvaluator(create_fd())
-        self.assertEqual(evaluator._ExpressionEvaluator__parse_decimal('0.0'), Decimal(0.0))
-    
     def test_process_prefix_unary_operator1(self):
         evaluator = ExpressionEvaluator(create_fd())
         operations = []
@@ -271,6 +254,11 @@ class EvaluatorTest(unittest.TestCase):
         fd = create_fd()
         evaluator = ExpressionEvaluator(fd)
         self.assertEqual(evaluator.evaluate(['pi']), Rational(22, 7))
+    def test_evaluate_variable(self):
+        fd = create_fd()
+        fd.constants['a'].set_value(Rational(11, 7))
+        evaluator = ExpressionEvaluator(fd)
+        self.assertEqual(evaluator.evaluate(['a']), Rational(11, 7))
     def test_evaluate_addition(self):
         fd = create_fd()
         evaluator = ExpressionEvaluator(fd)
@@ -305,7 +293,7 @@ DIGITS = set([str(i) for i in range(10)])
 PUNCTUATION = set(['+', '-', '*', '/', '%', ','])
 
 def create_fd() -> FunctionalityDatabase:
-    fd = FunctionalityDatabase(' ', '()', '(', '.', LETTERS, DIGITS, PUNCTUATION)
+    fd = FunctionalityDatabase(' ', '()', '(', '.', LETTERS, DIGITS, PUNCTUATION, functionality.std.parse_int, functionality.std.parse_decimal)
 
     fd.register_operation(BinaryOperation(1, '+', '+', functionality.std.add))
     fd.register_operation(BinaryOperation(1, '-', '-', functionality.std.subtract))

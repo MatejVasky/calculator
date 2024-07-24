@@ -1,6 +1,6 @@
 from typing import Optional
 from .value import Value
-from .exceptions import UndefinedError
+from .exceptions import VariableUndefinedError
 
 class Variable(Value):
     """A class for variables"""
@@ -17,7 +17,7 @@ class Variable(Value):
     def get_value(self) -> Value:
         """Returns variable's value"""
         if self.__value == None:
-            raise UndefinedError()
+            raise VariableUndefinedError()
         return self.__value
     
     def set_value(self, value : Value) -> None:

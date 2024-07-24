@@ -1,5 +1,5 @@
 from functionality.std import Rational, ComplexRational, Decimal, ComplexDecimal, add, subtract, multiply, divide, floordivide, modulo, pos, neg, sin, cos, exp, log
-from arithmetic_expressions.functionality_database.exceptions import UndefinedError
+from arithmetic_expressions.functionality_database.exceptions import WrongNumberOfArgumentsError, UndefinedError
 from arithmetic_expressions.functionality_database import Variable
 import unittest
 import math
@@ -11,6 +11,14 @@ class STDOperationsTest(unittest.TestCase):
     def test_sin2(self):
         q = ComplexDecimal(0.5, 0)
         self.assertAlmostEqual(float(sin(q)), math.sin(0.5))
+    def test_sin_wrong_number_of_arguments1(self):
+        with self.assertRaises(WrongNumberOfArgumentsError):
+            sin()
+    def test_sin_wrong_number_of_arguments2(self):
+        q1 = Rational(1, 1)
+        q2 = Rational(2, 1)
+        with self.assertRaises(WrongNumberOfArgumentsError):
+            sin(q1, q2)
     def test_sin_wrong_type(self):
         q = 1
         with self.assertRaises(UndefinedError):
@@ -29,6 +37,14 @@ class STDOperationsTest(unittest.TestCase):
     def test_cos2(self):
         q = ComplexDecimal(0.5, 0)
         self.assertAlmostEqual(float(cos(q)), math.cos(0.5))
+    def test_cos_wrong_number_of_arguments1(self):
+        with self.assertRaises(WrongNumberOfArgumentsError):
+            cos()
+    def test_cos_wrong_number_of_arguments2(self):
+        q1 = Rational(1, 1)
+        q2 = Rational(2, 1)
+        with self.assertRaises(WrongNumberOfArgumentsError):
+            cos(q1, q2)
     def test_cos_wrong_type(self):
         q = 1
         with self.assertRaises(UndefinedError):
@@ -47,6 +63,14 @@ class STDOperationsTest(unittest.TestCase):
     def test_exp2(self):
         q = ComplexDecimal(0.5, 0)
         self.assertAlmostEqual(float(exp(q)), math.exp(0.5))
+    def test_exp_wrong_number_of_arguments1(self):
+        with self.assertRaises(WrongNumberOfArgumentsError):
+            exp()
+    def test_exp_wrong_number_of_arguments2(self):
+        q1 = Rational(1, 1)
+        q2 = Rational(2, 1)
+        with self.assertRaises(WrongNumberOfArgumentsError):
+            exp(q1, q2)
     def test_exp_wrong_type(self):
         q = 1
         with self.assertRaises(UndefinedError):
@@ -65,6 +89,14 @@ class STDOperationsTest(unittest.TestCase):
     def test_log2(self):
         q = ComplexDecimal(0.5, 0)
         self.assertAlmostEqual(float(log(q)), math.log(0.5))
+    def test_log_wrong_number_of_arguments1(self):
+        with self.assertRaises(WrongNumberOfArgumentsError):
+            log()
+    def test_log_wrong_number_of_arguments2(self):
+        q1 = Rational(1, 1)
+        q2 = Rational(2, 1)
+        with self.assertRaises(WrongNumberOfArgumentsError):
+            log(q1, q2)
     def test_log_wrong_type(self):
         q = 1
         with self.assertRaises(UndefinedError):

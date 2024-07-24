@@ -1,4 +1,4 @@
 from .parsing_exceptions import ParsingError, ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError, IsolatedDecimalPointError
-from .evalation_exceptions import EvaluationError, UndefinedError, FunctionOrOperationEvaluationException
+from .evalation_exceptions import EvaluationError, WrongNumberOfArgumentsError, UndefinedError, VariableUndefinedError, ParserError, ParserEvaluationError, FunctionOrOperationEvaluationError, InvalidTokensError
 
-__all__ = ['ParsingError', 'ImplicitMultiplicationError', 'BracketsMismatchError', 'EmptyBracketsError', 'MissingOperandError', 'UnknownVariableError', 'UnknownOperatorError', 'TwoDecimalPointsError', 'IsolatedDecimalPointError', 'EvaluationError', 'UndefinedError', 'FunctionOrOperationEvaluationException']
+__all__ = ['ParsingError', 'ImplicitMultiplicationError', 'BracketsMismatchError', 'EmptyBracketsError', 'MissingOperandError', 'UnknownVariableError', 'UnknownOperatorError', 'TwoDecimalPointsError', 'IsolatedDecimalPointError', 'EvaluationError', 'WrongNumberOfArgumentsError', 'UndefinedError', 'VariableUndefinedError', 'ParserError', 'ParserEvaluationError', 'FunctionOrOperationEvaluationError', 'InvalidTokensError']

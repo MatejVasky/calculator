@@ -1,5 +1,5 @@
 from arithmetic_expressions.functionality_database import Variable, unpack_variables
-from arithmetic_expressions.functionality_database.exceptions import UndefinedError
+from arithmetic_expressions.functionality_database.exceptions import VariableUndefinedError
 from functionality.std import Rational
 import unittest
 
@@ -16,7 +16,7 @@ class VariableTest(unittest.TestCase):
             Variable('x', 45)
     def test_value_none(self):
         x = Variable('x', None)
-        with self.assertRaises(UndefinedError):
+        with self.assertRaises(VariableUndefinedError):
             x.get_value()
     def test_set(self):
         v = Variable('x', Rational(4, 5))

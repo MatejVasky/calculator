@@ -1,7 +1,7 @@
 from typing import Callable
 from .value import Value
 from .parameters import Parameters
-from .exceptions import EvaluationError, FunctionOrOperationEvaluationException
+from .exceptions import EvaluationError, FunctionOrOperationEvaluationError
 
 class Function(Value):
     """An abstract base class for functions"""
@@ -26,6 +26,6 @@ class Function(Value):
             if isinstance(e, EvaluationError):
                 raise e
             else:
-                raise FunctionOrOperationEvaluationException(e)
+                raise FunctionOrOperationEvaluationError(e)
         else:
             return res

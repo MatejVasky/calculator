@@ -6,51 +6,51 @@ from ..numbers import ComplexNumber, Rational
 def add(a : Value, b : Value) -> Value:
     if isinstance(a, ComplexNumber) and isinstance(b, ComplexNumber):
         return a + b
-    raise UndefinedError()
+    raise UndefinedError("addition undefined")
 
 @unpack_variables
 def subtract(a : Value, b : Value) -> Value:
     if isinstance(a, ComplexNumber) and isinstance(b, ComplexNumber):
         return a - b
-    raise UndefinedError()
+    raise UndefinedError("subtraction undefined")
 
 @unpack_variables
 def multiply(a : Value, b : Value) -> Value:
     if isinstance(a, ComplexNumber) and isinstance(b, ComplexNumber):
         return a * b
-    raise UndefinedError()
+    raise UndefinedError("multiplication undefined")
 
 @unpack_variables
 def divide(a : Value, b : Value) -> Value:
     if isinstance(a, ComplexNumber) and isinstance(b, ComplexNumber):
         if b.is_zero():
-            raise UndefinedError()
+            raise UndefinedError("cannot divide by zero")
         return a / b
-    raise UndefinedError()
+    raise UndefinedError("division undefined")
 
 @unpack_variables
 def floordivide(a : Value, b : Value) -> Value:
     if isinstance(a, ComplexNumber) and isinstance(b, ComplexNumber):
         if not a.is_int() or not b.is_int():
-            raise UndefinedError()
+            raise UndefinedError("can only perform floor division on integers")
         if b.is_zero():
-            raise UndefinedError()
+            raise UndefinedError("cannot divide by zero")
         return Rational(int(a) // int(b), 1)
-    raise UndefinedError()
+    raise UndefinedError("floor division undefined")
 
 @unpack_variables
 def modulo(a : Value, b : Value) -> Value:
     if isinstance(a, ComplexNumber) and isinstance(b, ComplexNumber):
         if not a.is_int() or not b.is_int():
-            raise UndefinedError()
+            raise UndefinedError("can only perform modulo on integers")
         if b.is_zero():
-            raise UndefinedError()
+            raise UndefinedError("cannot divide by zero")
         return Rational(int(a) % int(b), 1)
-    raise UndefinedError()
+    raise UndefinedError("modulo undefined")
 
 def add_parameter(a : Value, b : Value) -> Value:
     if isinstance(b, Parameters):
-        raise UndefinedError()
+        raise UndefinedError("cannot add parameters from the right")
     if isinstance(a, Parameters):
         return a + b
     else:
@@ -60,17 +60,17 @@ def evaluate_function(a : Value, b : Value) -> Value:
     if isinstance(a, Variable):
         a = a.get_value()
     if not isinstance(a, Function):
-        raise UndefinedError()
+        raise UndefinedError("cannot evaluate value, that is not a function")
     return a.evaluate(b)
 
 @unpack_variables
 def pos(a : Value) -> Value:
     if isinstance(a, ComplexNumber):
         return +a
-    raise UndefinedError()
+    raise UndefinedError("positive operation failed")
 
 @unpack_variables
 def neg(a : Value) -> Value:
     if isinstance(a, ComplexNumber):
         return -a
-    raise UndefinedError()
+    raise UndefinedError("negative operation failed")

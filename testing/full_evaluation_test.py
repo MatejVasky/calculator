@@ -119,7 +119,7 @@ DIGITS = set([str(i) for i in range(10)])
 PUNCTUATION = set(['+', '-', '*', '/', '%', ','])
 
 def create_fd() -> FunctionalityDatabase:
-    fd = FunctionalityDatabase(' ', '()', '(', '.', LETTERS, DIGITS, PUNCTUATION)
+    fd = FunctionalityDatabase(' ', '()', '(', '.', LETTERS, DIGITS, PUNCTUATION, functionality.std.parse_int, functionality.std.parse_decimal)
 
     fd.register_operation(BinaryOperation(1, '+', '+', functionality.std.add))
     fd.register_operation(BinaryOperation(1, '-', '-', functionality.std.subtract))
