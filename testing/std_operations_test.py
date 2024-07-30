@@ -1,8 +1,8 @@
-from functionality.std import Rational, ComplexRational, Decimal, ComplexDecimal, add, subtract, multiply, divide, floordivide, modulo, add_parameter, evaluate_function, pos, neg
+from functionality.std import Rational, ComplexRational, Decimal, ComplexDecimal, add, subtract, multiply, divide, floordivide, modulo, power, add_parameter, evaluate_function, pos, neg, assign_to_variable
 from arithmetic_expressions.functionality_database.exceptions import UndefinedError, FunctionOrOperationEvaluationError
 from arithmetic_expressions.functionality_database import Variable, Parameters, Function
 import unittest
-from math import sqrt
+from math import exp, pi, log
 
 class STDOperationsTest(unittest.TestCase):
     def test_add1(self):
@@ -105,7 +105,7 @@ class STDOperationsTest(unittest.TestCase):
         with self.assertRaises(UndefinedError):
             divide(q1, q2)
     def test_divide_zero_division(self):
-        q1 = Function('f', test_function)
+        q1 = Rational(3, 1)
         q2 = Rational(0, 1)
         with self.assertRaises(UndefinedError):
             divide(q1, q2)
@@ -147,7 +147,7 @@ class STDOperationsTest(unittest.TestCase):
         with self.assertRaises(UndefinedError):
             floordivide(q1, q2)
     def test_floordivide_zero_division(self):
-        q1 = Function('f', test_function)
+        q1 = Rational(6, 1)
         q2 = Rational(0, 1)
         with self.assertRaises(UndefinedError):
             floordivide(q1, q2)
@@ -189,7 +189,7 @@ class STDOperationsTest(unittest.TestCase):
         with self.assertRaises(UndefinedError):
             modulo(q1, q2)
     def test_modulo_zero_division(self):
-        q1 = Function('f', test_function)
+        q1 = Rational(2, 1)
         q2 = Rational(0, 1)
         with self.assertRaises(UndefinedError):
             modulo(q1, q2)
@@ -201,6 +201,53 @@ class STDOperationsTest(unittest.TestCase):
         q1 = Rational(6, 1)
         q2 = Variable('x', Rational(4, 1))
         self.assertEqual(modulo(q1, q2), Rational(2, 1))
+
+    def test_power1(self):
+        q1 = ComplexRational(-8, 1, 0, 1)
+        q2 = Rational(5, 3)
+        self.assertEqual(power(q1, q2), Rational(-32, 1))
+    def test_power2(self):
+        q1 = Decimal(exp(1))
+        q2 = ComplexDecimal(log(2), pi/2)
+        self.assertAlmostEqual(float(power(q1, q2).re()), 0)
+        self.assertAlmostEqual(float(power(q1, q2).im()), 2)
+    def test_power_wrong_type1(self):
+        q1 = Decimal(0.5)
+        q2 = Function('f', test_function)
+        with self.assertRaises(UndefinedError):
+            power(q1, q2)
+    def test_power_wrong_type2(self):
+        q1 = Function('f', test_function)
+        q2 = Rational(5, 6)
+        with self.assertRaises(UndefinedError):
+            power(q1, q2)
+    def test_power_zero_base_positive_exponent(self):
+        q1 = Rational(0, 1)
+        q2 = Rational(1, 2)
+        self.assertEqual(power(q1, q2), Rational(0, 1))
+    def test_power_zero_base_zero_exponent(self):
+        q1 = Rational(0, 1)
+        q2 = Rational(0, 1)
+        with self.assertRaises(UndefinedError):
+            power(q1, q2)
+    def test_power_zero_base_negative_exponent(self):
+        q1 = Rational(0, 1)
+        q2 = Rational(-1, 2)
+        with self.assertRaises(UndefinedError):
+            power(q1, q2)
+    def test_power_zero_base_imaginary_exponent(self):
+        q1 = Rational(0, 1)
+        q2 = ComplexRational(1, 2, 1, 1)
+        with self.assertRaises(UndefinedError):
+            power(q1, q2)
+    def test_power_variable1(self):
+        q1 = Variable('x', Rational(4, 9))
+        q2 = Rational(3, 2)
+        self.assertEqual(power(q1, q2), Rational(8, 27))
+    def test_power_variable2(self):
+        q1 = Rational(4, 9)
+        q2 = Variable('x', Rational(3, 2))
+        self.assertEqual(power(q1, q2), Rational(8, 27))
 
     def test_add_parameter1(self):
         params = Parameters()
@@ -289,6 +336,32 @@ class STDOperationsTest(unittest.TestCase):
     def test_neg_variable(self):
         q = Variable('x', Rational(2, 3))
         self.assertEqual(neg(q), Rational(-2, 3))
+    
+    def test_assign_to_variable1(self):
+        x = Variable('x', None)
+        q = Rational(1, 2)
+        self.assertEqual(assign_to_variable(x, q), Rational(1, 2))
+        self.assertEqual(x.get_value(), Rational(1, 2))
+    def test_assign_to_variable2(self):
+        x = Variable('x', Rational(1, 3))
+        q = Decimal(0.5)
+        self.assertEqual(assign_to_variable(x, q), Decimal(0.5))
+        self.assertEqual(x.get_value(), Decimal(0.5))
+    def test_assign_to_variable_wrong_type1(self):
+        x = Rational(1, 3)
+        q = Decimal(0.5)
+        with self.assertRaises(UndefinedError):
+            assign_to_variable(x, q)
+    def test_assign_to_variable_wrong_type2(self):
+        x = Variable('x', None)
+        q = Function('f', test_function)
+        with self.assertRaises(UndefinedError):
+            assign_to_variable(x, q)
+    def test_assign_to_variable_variable(self):
+        x = Variable('x', Rational(1, 3))
+        q = Variable('q', Decimal(0.5))
+        self.assertEqual(assign_to_variable(x, q), Decimal(0.5))
+        self.assertEqual(x.get_value(), Decimal(0.5))
     
 def test_function(*args):
     if len(args) == 0:

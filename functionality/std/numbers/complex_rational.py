@@ -1,4 +1,4 @@
-from datastructures import gcd
+from datastructures import gcd, pow_by_squaring, get_int_nth_root
 from .complex_number import ComplexNumber
 
 class ComplexRational(ComplexNumber):
@@ -75,6 +75,16 @@ class ComplexRational(ComplexNumber):
         con = self.conj()
         abss = self.abs_squared()
         return ComplexRational(abss.b * con.a, abss.a * con.b, abss.b * con.c, abss.a * con.d)
+    
+    def numerator(self) -> int:
+        if self.is_rational():
+            return self.a
+        raise ValueError("not rational")
+    
+    def denominator(self) -> int:
+        if self.is_rational():
+            return self.b
+        raise ValueError("not rational")
 
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Rational):
@@ -148,6 +158,26 @@ class ComplexRational(ComplexNumber):
         elif isinstance(value, ComplexDecimal):
             return self.to_decimal() * value
         return NotImplemented
+    
+    # def __pow__(self, value : object) -> ComplexNumber:
+    #     if isinstance(value, ComplexNumber):
+    #         if value.is_int():
+    #             if value.is_positive():
+    #                 return pow_by_squaring(self, int(value))
+    #             elif value.is_zero():
+    #                 return Rational(1, 1)
+    #             else:
+    #                 return pow_by_squaring(self.inv(), -int(value))
+    #         elif self.is_rational() and value.is_rational():
+    #             num_root = get_int_nth_root(value.denominator(), self.numerator())
+    #             den_root = get_int_nth_root(value.denominator(), self.denominator())
+    #             if num_root == None or den_root == None:
+    #                 return (self.log() * value).exp()
+    #             else:
+    #                 return Rational(num_root ** value.numerator(), den_root ** value.numerator())
+    #         else:
+    #             return (self.log() * value).exp()
+    #     return NotImplemented
     
     def __str__(self) -> str:
         r = str(self.a) if self.b == 1 else f"{self.a}/{self.b}"

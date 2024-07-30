@@ -68,6 +68,12 @@ class ComplexDecimal(ComplexNumber):
         abss = self.abs_squared()
         return ComplexDecimal(con.a / abss.val, con.b / abss.val)
     
+    def numerator(self) -> int:
+        raise ValueError("not rational")
+    
+    def denominator(self) -> int:
+        raise ValueError("not rational")
+    
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Rational):
             return self.is_real() and self.re() == value.to_decimal()
@@ -135,6 +141,13 @@ class ComplexDecimal(ComplexNumber):
             return ComplexDecimal(self.a * value.a - self.b * value.b,
                                   self.a * value.b + self.b * value.a)
         return NotImplemented
+    
+    # def __pow__(self, value : object) -> ComplexNumber:
+    #     if isinstance(value, ComplexNumber):
+    #         if self.is_zero():
+    #             return ComplexDecimal(0, 0)
+    #         return (self.log() * value).exp()
+    #     return NotImplemented
     
     def __str__(self) -> str:
         if self.b == 0:

@@ -1,6 +1,6 @@
 from functionality.std import Rational, ComplexRational, Decimal, ComplexDecimal
 import unittest
-from math import sqrt
+from math import sqrt, pi, log, exp, cos, sin
 
 class STDNumbersTest(unittest.TestCase):
     def test_rational_init_coprime(self):
@@ -1594,6 +1594,455 @@ class STDNumbersTest(unittest.TestCase):
         q = ComplexDecimal(1, 1)
         with self.assertRaises(ValueError):
             float(q)
+    
+    def test_rational_numerator(self):
+        q = Rational(5, 3)
+        self.assertEqual(q.numerator(), 5)
+    def test_complex_rational_numerator1(self):
+        q = ComplexRational(5, 3, 0, 1)
+        self.assertEqual(q.numerator(), 5)
+    def test_complex_rational_numerator2(self):
+        q = ComplexRational(5, 3, 2, 7)
+        with self.assertRaises(ValueError):
+            q.numerator()
+    def test_decimal_numerator(self):
+        q = Decimal(1)
+        with self.assertRaises(ValueError):
+            q.numerator()
+    def test_complex_decimal_numerator(self):
+        q = ComplexDecimal(1, 0)
+        with self.assertRaises(ValueError):
+            q.numerator()
+    
+    def test_rational_denominator(self):
+        q = Rational(5, 3)
+        self.assertEqual(q.denominator(), 3)
+    def test_complex_rational_denominator1(self):
+        q = ComplexRational(5, 3, 0, 1)
+        self.assertEqual(q.denominator(), 3)
+    def test_complex_rational_denominator2(self):
+        q = ComplexRational(5, 3, 2, 7)
+        with self.assertRaises(ValueError):
+            q.denominator()
+    def test_decimal_denominator(self):
+        q = Decimal(1)
+        with self.assertRaises(ValueError):
+            q.denominator()
+    def test_complex_decimal_denominator(self):
+        q = ComplexDecimal(1, 0)
+        with self.assertRaises(ValueError):
+            q.denominator()
+    
+    def test_rational_arg1(self):
+        q = Rational(5, 3)
+        self.assertAlmostEqual(float(q.arg()), 0)
+    def test_rational_arg2(self):
+        q = Rational(-5, 3)
+        self.assertAlmostEqual(float(q.arg()), pi)
+    def test_rational_arg_zero(self):
+        q = Rational(0, 1)
+        with self.assertRaises(ValueError):
+            q.arg()
+    def test_complex_rational_arg1(self):
+        q = ComplexRational(5, 3, 0, 1)
+        self.assertAlmostEqual(float(q.arg()), 0)
+    def test_complex_rational_arg2(self):
+        q = ComplexRational(-5, 3, 0, 1)
+        self.assertAlmostEqual(float(q.arg()), pi)
+    def test_complex_rational_arg3(self):
+        q = ComplexRational(0, 1, 1, 1)
+        self.assertAlmostEqual(float(q.arg()), pi/2)
+    def test_complex_rational_arg4(self):
+        q = ComplexRational(0, 1, -1, 1)
+        self.assertAlmostEqual(float(q.arg()), -pi/2)
+    def test_complex_rational_arg5(self):
+        q = ComplexRational(1, 1, 1, 1)
+        self.assertAlmostEqual(float(q.arg()), pi/4)
+    def test_complex_rational_arg_zero(self):
+        q = ComplexRational(0, 1, 0, 1)
+        with self.assertRaises(ValueError):
+            q.arg()
+    def test_decimal_arg1(self):
+        q = Decimal(1.25)
+        self.assertAlmostEqual(float(q.arg()), 0)
+    def test_decimal_arg2(self):
+        q = Decimal(-1.25)
+        self.assertAlmostEqual(float(q.arg()), pi)
+    def test_decimal_arg_zero(self):
+        q = Decimal(0)
+        with self.assertRaises(ValueError):
+            q.arg()
+    def test_complex_decimal_arg1(self):
+        q = ComplexDecimal(1.25, 0)
+        self.assertAlmostEqual(float(q.arg()), 0)
+    def test_complex_decimal_arg2(self):
+        q = ComplexDecimal(-1.25, 0)
+        self.assertAlmostEqual(float(q.arg()), pi)
+    def test_complex_decimal_arg3(self):
+        q = ComplexDecimal(0, 1)
+        self.assertAlmostEqual(float(q.arg()), pi/2)
+    def test_complex_decimal_arg4(self):
+        q = ComplexDecimal(0, -1)
+        self.assertAlmostEqual(float(q.arg()), -pi/2)
+    def test_complex_decimal_arg5(self):
+        q = ComplexDecimal(1, 1)
+        self.assertAlmostEqual(float(q.arg()), pi/4)
+    def test_complex_decimal_arg_zero(self):
+        q = ComplexDecimal(0, 0)
+        with self.assertRaises(ValueError):
+            q.arg()
+    
+    def test_rational_log1(self):
+        q = Rational(5, 3)
+        self.assertAlmostEqual(float(q.log().re()), log(5 / 3))
+        self.assertAlmostEqual(float(q.log().im()), 0)
+    def test_rational_log2(self):
+        q = Rational(-5, 3)
+        self.assertAlmostEqual(float(q.log().re()), log(5 / 3))
+        self.assertAlmostEqual(float(q.log().im()), pi)
+    def test_rational_log_zero(self):
+        q = Rational(0, 1)
+        with self.assertRaises(ValueError):
+            q.log()
+    def test_complex_rational_log1(self):
+        q = ComplexRational(5, 3, 0, 1)
+        self.assertAlmostEqual(float(q.log().re()), log(5 / 3))
+        self.assertAlmostEqual(float(q.log().im()), 0)
+    def test_complex_rational_log2(self):
+        q = ComplexRational(-5, 3, 0, 1)
+        self.assertAlmostEqual(float(q.log().re()), log(5 / 3))
+        self.assertAlmostEqual(float(q.log().im()), pi)
+    def test_complex_rational_log3(self):
+        q = ComplexRational(0, 1, 1, 1)
+        self.assertAlmostEqual(float(q.log().re()), 0)
+        self.assertAlmostEqual(float(q.log().im()), pi/2)
+    def test_complex_rational_log4(self):
+        q = ComplexRational(0, 1, -1, 1)
+        self.assertAlmostEqual(float(q.log().re()), 0)
+        self.assertAlmostEqual(float(q.log().im()), -pi/2)
+    def test_complex_rational_log5(self):
+        q = ComplexRational(1, 1, 1, 1)
+        self.assertAlmostEqual(float(q.log().re()), log(sqrt(2)))
+        self.assertAlmostEqual(float(q.log().im()), pi/4)
+    def test_complex_rational_log_zero(self):
+        q = ComplexRational(0, 1, 0, 1)
+        with self.assertRaises(ValueError):
+            q.log()
+    def test_decimal_log1(self):
+        q = Decimal(1.25)
+        self.assertAlmostEqual(float(q.log().re()), log(1.25))
+        self.assertAlmostEqual(float(q.log().im()), 0)
+    def test_decimal_log2(self):
+        q = Decimal(-1.25)
+        self.assertAlmostEqual(float(q.log().re()), log(1.25))
+        self.assertAlmostEqual(float(q.log().im()), pi)
+    def test_decimal_log_zero(self):
+        q = Decimal(0)
+        with self.assertRaises(ValueError):
+            q.log()
+    def test_complex_decimal_log1(self):
+        q = ComplexDecimal(1.25, 0)
+        self.assertAlmostEqual(float(q.log().re()), log(1.25))
+        self.assertAlmostEqual(float(q.log().im()), 0)
+    def test_complex_decimal_log2(self):
+        q = ComplexDecimal(-1.25, 0)
+        self.assertAlmostEqual(float(q.log().re()), log(1.25))
+        self.assertAlmostEqual(float(q.log().im()), pi)
+    def test_complex_decimal_log3(self):
+        q = ComplexDecimal(0, 1)
+        self.assertAlmostEqual(float(q.log().re()), 0)
+        self.assertAlmostEqual(float(q.log().im()), pi/2)
+    def test_complex_decimal_log4(self):
+        q = ComplexDecimal(0, -1)
+        self.assertAlmostEqual(float(q.log().re()), 0)
+        self.assertAlmostEqual(float(q.log().im()), -pi/2)
+    def test_complex_decimal_log5(self):
+        q = ComplexDecimal(1, 1)
+        self.assertAlmostEqual(float(q.log().re()), log(sqrt(2)))
+        self.assertAlmostEqual(float(q.log().im()), pi/4)
+    def test_complex_decimal_log_zero(self):
+        q = ComplexDecimal(0, 0)
+        with self.assertRaises(ValueError):
+            q.log()
+    
+    def test_rational_exp1(self):
+        q = Rational(5, 3)
+        self.assertAlmostEqual(float(q.exp().re()), exp(5 / 3))
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    def test_rational_exp2(self):
+        q = Rational(-5, 3)
+        self.assertAlmostEqual(float(q.exp().re()), exp(-5 / 3))
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    def test_rational_exp_zero(self):
+        q = Rational(0, 1)
+        self.assertAlmostEqual(float(q.exp().re()), 1)
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    def test_complex_rational_exp1(self):
+        q = ComplexRational(5, 3, 0, 1)
+        self.assertAlmostEqual(float(q.exp().re()), exp(5 / 3))
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    def test_complex_rational_exp2(self):
+        q = ComplexRational(-5, 3, 0, 1)
+        self.assertAlmostEqual(float(q.exp().re()), exp(-5 / 3))
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    def test_complex_rational_exp3(self):
+        q = ComplexRational(0, 1, 1, 1)
+        self.assertAlmostEqual(float(q.exp().re()), cos(1))
+        self.assertAlmostEqual(float(q.exp().im()), sin(1))
+    def test_complex_rational_exp4(self):
+        q = ComplexRational(0, 1, -1, 1)
+        self.assertAlmostEqual(float(q.exp().re()), cos(1))
+        self.assertAlmostEqual(float(q.exp().im()), -sin(1))
+    def test_complex_rational_exp5(self):
+        q = ComplexRational(1, 1, 2, 1)
+        self.assertAlmostEqual(float(q.exp().re()), exp(1) * cos(2))
+        self.assertAlmostEqual(float(q.exp().im()), exp(1) * sin(2))
+    def test_complex_rational_exp_zero(self):
+        q = ComplexRational(0, 1, 0, 1)
+        self.assertAlmostEqual(float(q.exp().re()), 1)
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    def test_decimal_exp1(self):
+        q = Decimal(1.25)
+        self.assertAlmostEqual(float(q.exp().re()), exp(1.25))
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    def test_decimal_exp2(self):
+        q = Decimal(-1.25)
+        self.assertAlmostEqual(float(q.exp().re()), exp(-1.25))
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    def test_decimal_exp_zero(self):
+        q = Decimal(0)
+        self.assertAlmostEqual(float(q.exp().re()), 1)
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    def test_complex_decimal_exp1(self):
+        q = ComplexDecimal(1.25, 0)
+        self.assertAlmostEqual(float(q.exp().re()), exp(1.25))
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    def test_complex_decimal_exp2(self):
+        q = ComplexDecimal(-1.25, 0)
+        self.assertAlmostEqual(float(q.exp().re()), exp(-1.25))
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    def test_complex_decimal_exp3(self):
+        q = ComplexDecimal(0, 1)
+        self.assertAlmostEqual(float(q.exp().re()), cos(1))
+        self.assertAlmostEqual(float(q.exp().im()), sin(1))
+    def test_complex_decimal_exp4(self):
+        q = ComplexDecimal(0, -1)
+        self.assertAlmostEqual(float(q.exp().re()), cos(1))
+        self.assertAlmostEqual(float(q.exp().im()), -sin(1))
+    def test_complex_decimal_exp5(self):
+        q = ComplexDecimal(1, 2)
+        self.assertAlmostEqual(float(q.exp().re()), exp(1) * cos(2))
+        self.assertAlmostEqual(float(q.exp().im()), exp(1) * sin(2))
+    def test_complex_decimal_exp_zero(self):
+        q = ComplexDecimal(0, 0)
+        self.assertAlmostEqual(float(q.exp().re()), 1)
+        self.assertAlmostEqual(float(q.exp().im()), 0)
+    
+    def test_pow_rational_rational_positive_base_positive_int_exponent(self):
+        a = Rational(2, 3)
+        b = Rational(2, 1)
+        self.assertEqual(a ** b, Rational(4, 9))
+    def test_pow_rational_rational_positive_base_negative_int_exponent(self):
+        a = Rational(2, 3)
+        b = Rational(-2, 1)
+        self.assertEqual(a ** b, Rational(9, 4))
+    def test_pow_rational_rational_positive_base_zero_exponent(self):
+        a = Rational(2, 3)
+        b = Rational(0, 1)
+        self.assertEqual(a ** b, Rational(1, 1))
+    def test_pow_rational_rational_negative_base_positive_int_exponent(self):
+        a = Rational(-2, 3)
+        b = Rational(3, 1)
+        self.assertEqual(a ** b, Rational(-8, 27))
+    def test_pow_rational_rational_zero_base_positive_int_exponent(self):
+        a = Rational(0, 1)
+        b = Rational(2, 1)
+        self.assertEqual(a ** b, Rational(0, 1))
+    def test_pow_rational_rational_zero_base_zero_exponent(self):
+        a = Rational(0, 1)
+        b = Rational(0, 1)
+        with self.assertRaises(ValueError):
+            a ** b
+    def test_pow_rational_rational_zero_base_negative_int_exponent(self):
+        a = Rational(0, 1)
+        b = Rational(-2, 1)
+        with self.assertRaises(ValueError):
+            a ** b
+    def test_pow_rational_rational_positive_base_positive_exponent_rational_result(self):
+        a = Rational(4, 9)
+        b = Rational(3, 2)
+        self.assertEqual(a ** b, Rational(8, 27))
+    def test_pow_rational_rational_positive_base_negative_exponent_rational_result(self):
+        a = Rational(4, 9)
+        b = Rational(-1, 2)
+        self.assertEqual(a ** b, Rational(3, 2))
+    def test_pow_rational_rational_positive_base_positive_exponent_irrational_numerator(self):
+        a = Rational(2, 9)
+        b = Rational(3, 2)
+        self.assertAlmostEqual(float(a ** b), sqrt(8/729))
+    def test_pow_rational_rational_positive_base_negative_exponent_irrational_denominator(self):
+        a = Rational(4, 3)
+        b = Rational(-1, 2)
+        self.assertAlmostEqual(float(a ** b), sqrt(3/4))
+    def test_pow_rational_rational_negative_base_positive_exponent_rational_result(self):
+        a = Rational(-8, 27)
+        b = Rational(1, 3)
+        self.assertEqual(a ** b, Rational(-2, 3))
+    def test_pow_rational_rational_negative_base_positive_exponent_irrational_result(self):
+        a = Rational(-4, 27)
+        b = Rational(1, 3)
+        self.assertAlmostEqual(float(a ** b), -4**(1/3) / 3)
+    def test_pow_rational_rational_negative_base_positive_exponent_imaginary_result(self):
+        a = Rational(-1, 1)
+        b = Rational(1, 2)
+        self.assertAlmostEqual(float((a ** b).re()), 0)
+        self.assertAlmostEqual(float((a ** b).im()), 1)
+    def test_pow_rational_rational_zero_base_positive_exponent(self):
+        a = Rational(0, 1)
+        b = Rational(2, 3)
+        self.assertEqual(a ** b, Rational(0, 1))
+    def test_pow_rational_rational_zero_base_negative_exponent(self):
+        a = Rational(0, 1)
+        b = Rational(-2, 3)
+        with self.assertRaises(ValueError):
+            a ** b
+    def test_pow_rational_complex_rational_imaginary_exponent(self):
+        a = Rational(2, 1)
+        b = ComplexRational(1, 1, 2, 1)
+        self.assertAlmostEqual(float((a ** b).re()), 2 * cos(log(4)))
+        self.assertAlmostEqual(float((a ** b).im()), 2 * sin(log(4)))
+    def test_pow_rational_complex_rational_real_exponent(self):
+        a = Rational(-8, 27)
+        b = ComplexRational(2, 3, 0, 1)
+        self.assertEqual(a ** b, Rational(4, 9))
+    def test_pow_complex_rational_rational_positive_integer_exponent(self):
+        a = ComplexRational(1, 1, 1, 1)
+        b = Rational(2, 1)
+        self.assertEqual(a ** b, ComplexRational(0, 1, 2, 1))
+    def test_pow_complex_rational_rational_zero_exponent(self):
+        a = ComplexRational(1, 1, 1, 1)
+        b = Rational(0, 1)
+        self.assertEqual(a ** b, Rational(1, 1))
+    def test_pow_complex_rational_rational_negative_integer_exponent(self):
+        a = ComplexRational(1, 1, 1, 1)
+        b = Rational(-1, 1)
+        self.assertEqual(a ** b, ComplexRational(1, 2, -1, 2))
+    def test_pow_complex_rational_rational_rational_exponent(self):
+        a = ComplexRational(0, 1, 2, 1)
+        b = Rational(3, 2)
+        self.assertAlmostEqual(float((a ** b).re()), -2)
+        self.assertAlmostEqual(float((a ** b).im()), 2)
+    def test_pow_complex_rational_complex_rational_integer_exponent(self):
+        a = ComplexRational(1, 1, 1, 1)
+        b = ComplexRational(2, 1, 0, 1)
+        self.assertEqual(a ** b, ComplexRational(0, 1, 2, 1))
+    def test_pow_complex_rational_complex_rational_real_base_rational_exponent(self):
+        a = ComplexRational(9, 4, 0, 1)
+        b = ComplexRational(3, 2, 0, 1)
+        self.assertEqual(a ** b, Rational(27, 8))
+    def test_pow_complex_rational_complex_rational_imaginary_exponent(self):
+        a = ComplexRational(1, 1, 1, 1)
+        b = ComplexRational(2, 1, 3, 1)
+        self.assertAlmostEqual(float((a ** b).re()), exp(log(2) - 3/4 * pi) * cos((pi/2) + log(sqrt(8))))
+        self.assertAlmostEqual(float((a ** b).im()), exp(log(2) - 3/4 * pi) * sin((pi/2) + log(sqrt(8))))
+    def test_pow_rational_decimal(self):
+        a = Rational(9, 4)
+        b = Decimal(0.5)
+        self.assertAlmostEqual(float(a ** b), 1.5)
+    def test_pow_rational_complex_decimal(self):
+        a = Rational(2, 1)
+        b = ComplexDecimal(1, 2)
+        self.assertAlmostEqual(float((a ** b).re()), 2 * cos(log(4)))
+        self.assertAlmostEqual(float((a ** b).im()), 2 * sin(log(4)))
+    def test_pow_complex_rational_decimal(self):
+        a = ComplexRational(0, 1, 2, 1)
+        b = Decimal(-0.5)
+        self.assertAlmostEqual(float((a ** b).re()), 1/2)
+        self.assertAlmostEqual(float((a ** b).im()), -1/2)
+    def test_pow_complex_rational_complex_decimal(self):
+        a = ComplexRational(1, 1, 1, 1)
+        b = ComplexDecimal(2, 3)
+        self.assertAlmostEqual(float((a ** b).re()), exp(log(2) - 3/4 * pi) * cos((pi/2) + log(sqrt(8))))
+        self.assertAlmostEqual(float((a ** b).im()), exp(log(2) - 3/4 * pi) * sin((pi/2) + log(sqrt(8))))
+    def test_pow_decimal_decimal(self):
+        a = Decimal(2.25)
+        b = Decimal(0.5)
+        self.assertAlmostEqual(float(a ** b), 1.5)
+    def test_pow_decimal_decimal_zero_base_positive_numerator(self):
+        a = Decimal(0)
+        b = Decimal(1.234)
+        self.assertAlmostEqual(float(a ** b), 0)
+    def test_pow_decimal_decimal_zero_base_zero_exponent(self):
+        a = Decimal(0)
+        b = Decimal(0)
+        with self.assertRaises(ValueError):
+            a ** b
+    def test_pow_decimal_decimal_zero_base_negative_exponent(self):
+        a = Decimal(0)
+        b = Decimal(-2.34)
+        with self.assertRaises(ValueError):
+            a ** b
+    def test_pow_decimal_decimal_negative_base(self):
+        a = Decimal(-1)
+        b = Decimal(0.5)
+        self.assertAlmostEqual(float((a ** b).re()), 0)
+        self.assertAlmostEqual(float((a ** b).im()), 1)
+    def test_pow_decimal_rational(self):
+        a = Decimal(2.25)
+        b = Rational(3, 2)
+        self.assertAlmostEqual(float(a ** b), 27 / 8)
+    def test_pow_decimal_rational_negative_base(self):
+        a = Decimal(-27/8)
+        b = Rational(1, 3)
+        self.assertAlmostEqual(float(a ** b), -3/2)
+    def test_pow_decimal_complex_rational(self):
+        a = Decimal(exp(1))
+        b = ComplexRational(2, 1, 1, 1)
+        self.assertAlmostEqual(float((a ** b).re()), exp(2) * cos(1))
+        self.assertAlmostEqual(float((a ** b).im()), exp(2) * sin(1))
+    def test_pow_decimal_complex_decimal(self):
+        a = Decimal(exp(1))
+        b = ComplexDecimal(2, pi/2)
+        self.assertAlmostEqual(float((a ** b).re()), 0)
+        self.assertAlmostEqual(float((a ** b).im()), exp(2))
+    def test_pow_complex_decimal_decimal(self):
+        a = ComplexDecimal(0, 2)
+        b = Decimal(0.5)
+        self.assertAlmostEqual(float((a ** b).re()), 1)
+        self.assertAlmostEqual(float((a ** b).im()), 1)
+    def test_pow_complex_decimal_decimal_zero_base_positive_exponent(self):
+        a = ComplexDecimal(0, 0)
+        b = Decimal(1.4)
+        self.assertAlmostEqual(float(a ** b), 0)
+    def test_pow_complex_decimal_decimal_zero_base_zero_exponent(self):
+        a = ComplexDecimal(0, 0)
+        b = Decimal(0)
+        with self.assertRaises(ValueError):
+            a ** b
+    def test_pow_complex_decimal_decimal_zero_base_negative_exponent(self):
+        a = ComplexDecimal(0, 0)
+        b = Decimal(-1.4)
+        with self.assertRaises(ValueError):
+            a ** b
+    def test_pow_complex_decimal_rational(self):
+        a = ComplexDecimal(0, 2)
+        b = Rational(1, 2)
+        self.assertAlmostEqual(float((a ** b).re()), 1)
+        self.assertAlmostEqual(float((a ** b).im()), 1)
+    def test_pow_complex_decimal_rational_negative_base(self):
+        a = ComplexDecimal(-8, 0)
+        b = Rational(1, 3)
+        self.assertAlmostEqual(float(a ** b), -2)
+    def test_pow_complex_decimal_complex_rational(self):
+        a = ComplexDecimal(0, 2)
+        b = ComplexRational(1, 2, -1, 1)
+        self.assertAlmostEqual(float((a ** b).re()), sqrt(2) * exp(pi/2) * cos(pi/4 - log(2)))
+        self.assertAlmostEqual(float((a ** b).im()), sqrt(2) * exp(pi/2) * sin(pi/4 - log(2)))
+    def test_pow_complex_decimal_complex_decimal(self):
+        a = ComplexDecimal(0, 2)
+        b = ComplexDecimal(0.5, -1)
+        self.assertAlmostEqual(float((a ** b).re()), sqrt(2) * exp(pi/2) * cos(pi/4 - log(2)))
+        self.assertAlmostEqual(float((a ** b).im()), sqrt(2) * exp(pi/2) * sin(pi/4 - log(2)))
 
 if __name__ == '__main__':
     unittest.main()

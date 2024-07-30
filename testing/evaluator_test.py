@@ -319,7 +319,7 @@ def create_fd() -> FunctionalityDatabase:
     fd.register_function(Function('sin', functionality.std.sin))
     fd.register_function(Function('cos', functionality.std.cos))
     fd.register_function(Function('exp', functionality.std.exp))
-    fd.register_function(Function('log', functionality.std.log))
+    fd.register_function(Function('log', functionality.std.ln))
 
     return fd
 

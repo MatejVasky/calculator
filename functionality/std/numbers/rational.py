@@ -1,4 +1,4 @@
-from datastructures import gcd
+from datastructures import gcd, pow_by_squaring, get_int_nth_root
 from .complex_number import ComplexNumber
 
 class Rational(ComplexNumber):
@@ -69,6 +69,12 @@ class Rational(ComplexNumber):
             raise ZeroDivisionError("Division by zero")
         return Rational(self.b, self.a)
     
+    def numerator(self) -> int:
+        return self.a
+    
+    def denominator(self) -> int:
+        return self.b
+    
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Rational):
             return self.a == value.a and self.b == value.b
@@ -135,6 +141,26 @@ class Rational(ComplexNumber):
         elif isinstance(value, ComplexDecimal):
             return self.to_decimal() * value
         return NotImplemented
+    
+    # def __pow__(self, value : object) -> ComplexNumber:
+    #     if isinstance(value, ComplexNumber):
+    #         if value.is_int():
+    #             if value.is_positive():
+    #                 return pow_by_squaring(self, int(value))
+    #             elif value.is_zero():
+    #                 return Rational(1, 1)
+    #             else:
+    #                 return pow_by_squaring(self.inv(), -int(value))
+    #         elif value.is_rational():
+    #             num_root = get_int_nth_root(value.denominator(), self.numerator())
+    #             den_root = get_int_nth_root(value.denominator(), self.denominator())
+    #             if num_root == None or den_root == None:
+    #                 return (self.log() * value).exp()
+    #             else:
+    #                 return Rational(num_root, den_root)
+    #         else:
+    #             return (self.log() * value).exp()
+    #     return NotImplemented
     
     def __str__(self) -> str:
         if self.b == 1:

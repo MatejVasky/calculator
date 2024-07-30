@@ -9,7 +9,7 @@
     "decimal_point": ".",
     "letters": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
     "digits": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
-    "punctuation": ["+", "-", "*", "/", "%", ","],
+    "punctuation": ["+", "-", "*", "/", "%", "^", ",", ":", "="],
     "int_parser": {
         "package": "std",
         "function": "parse_int"
@@ -21,63 +21,77 @@
 
     "binary_operations": [
         {
-            "priority": 1,
-            "symbol": "+",
-            "token": "+",
-            "package": "std",
-            "function": "add"
-        },
-        {
-            "priority": 1,
-            "symbol": "-",
-            "token": "-",
-            "package": "std",
-            "function": "subtract"
-        },
-        {
-            "priority": 2,
-            "symbol": "*",
-            "token": "*",
-            "package": "std",
-            "function": "multiply"
-        },
-        {
-            "priority": 2,
-            "symbol": "/",
-            "token": "/",
-            "package": "std",
-            "function": "divide"
-        },
-        {
-            "priority": 2,
-            "symbol": "//",
-            "token": "//",
-            "package": "std",
-            "function": "floordivide"
-        },
-        {
-            "priority": 2,
-            "symbol": "%",
-            "token": "%",
-            "package": "std",
-            "function": "modulo"
-        },
-        {
-            "priority": 2,
-            "symbol": null,
-            "token": " ",
-            "package": "std",
-            "function": "multiply"
-        },
-        {
             "priority": 0,
+            "symbol": ":=",
+            "token": ":=",
+            "package": "std",
+            "function": "assign_to_variable"
+        },
+        {
+            "priority": 1,
             "symbol": ",",
             "token": ",",
             "package": "std",
             "function": "add_parameter"
         },
         {
+            "priority": 2,
+            "symbol": "+",
+            "token": "+",
+            "package": "std",
+            "function": "add"
+        },
+        {
+            "priority": 2,
+            "symbol": "-",
+            "token": "-",
+            "package": "std",
+            "function": "subtract"
+        },
+        {
             "priority": 3,
+            "symbol": "*",
+            "token": "*",
+            "package": "std",
+            "function": "multiply"
+        },
+        {
+            "priority": 3,
+            "symbol": "/",
+            "token": "/",
+            "package": "std",
+            "function": "divide"
+        },
+        {
+            "priority": 3,
+            "symbol": "//",
+            "token": "//",
+            "package": "std",
+            "function": "floordivide"
+        },
+        {
+            "priority": 3,
+            "symbol": "%",
+            "token": "%",
+            "package": "std",
+            "function": "modulo"
+        },
+        {
+            "priority": 3,
+            "symbol": null,
+            "token": " ",
+            "package": "std",
+            "function": "multiply"
+        },
+        {
+            "priority": 4,
+            "symbol": "^",
+            "token": "^",
+            "package": "std",
+            "function": "power"
+        },
+        {
+            "priority": 5,
             "symbol": null,
             "token": "()",
             "package": "std",
@@ -87,14 +101,14 @@
 
     "prefix_unary_operations": [
         {
-            "priority": 1,
+            "priority": 2,
             "symbol": "+",
             "token": "+u",
             "package": "std",
             "function": "pos"
         },
         {
-            "priority": 1,
+            "priority": 2,
             "symbol": "-",
             "token": "-u",
             "package": "std",
@@ -126,6 +140,56 @@
 
     "functions": [
         {
+            "name": "exp",
+            "package": "std",
+            "function": "exp"
+        },
+        {
+            "name": "ln",
+            "package": "std",
+            "function": "ln"
+        },
+        {
+            "name": "log",
+            "package": "std",
+            "function": "log"
+        },
+        {
+            "name": "sign",
+            "package": "std",
+            "function": "sign"
+        },
+        {
+            "name": "sgn",
+            "package": "std",
+            "function": "sign"
+        },
+        {
+            "name": "sqrt",
+            "package": "std",
+            "function": "sqrt"
+        },
+        {
+            "name": "root",
+            "package": "std",
+            "function": "root"
+        },
+        {
+            "name": "floor",
+            "package": "std",
+            "function": "floor"
+        },
+        {
+            "name": "ceil",
+            "package": "std",
+            "function": "ceil"
+        },
+        {
+            "name": "ceiling",
+            "package": "std",
+            "function": "ceil"
+        },
+        {
             "name": "sin",
             "package": "std",
             "function": "sin"
@@ -136,14 +200,79 @@
             "function": "cos"
         },
         {
-            "name": "exp",
+            "name": "tan",
             "package": "std",
-            "function": "exp"
+            "function": "tan"
         },
         {
-            "name": "log",
+            "name": "tg",
             "package": "std",
-            "function": "log"
+            "function": "tan"
+        },
+        {
+            "name": "cot",
+            "package": "std",
+            "function": "cot"
+        },
+        {
+            "name": "cotg",
+            "package": "std",
+            "function": "cot"
+        },
+        {
+            "name": "cotan",
+            "package": "std",
+            "function": "cot"
+        },
+        {
+            "name": "sec",
+            "package": "std",
+            "function": "sec"
+        },
+        {
+            "name": "csc",
+            "package": "std",
+            "function": "csc"
+        },
+        {
+            "name": "arcsin",
+            "package": "std",
+            "function": "arcsin"
+        },
+        {
+            "name": "asin",
+            "package": "std",
+            "function": "arcsin"
+        },
+        {
+            "name": "arccos",
+            "package": "std",
+            "function": "arccos"
+        },
+        {
+            "name": "acos",
+            "package": "std",
+            "function": "arccos"
+        },
+        {
+            "name": "arctan",
+            "package": "std",
+            "function": "arctan"
+        },
+        {
+            "name": "atan",
+            "package": "std",
+            "function": "arctan"
+        },
+        {
+            "name": "gcd",
+            "package": "std",
+            "function": "gcd"
+        },
+        {
+            "name": "lcm",
+            "package": "std",
+            "function": "lcm"
         }
     ]
 }

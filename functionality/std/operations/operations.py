@@ -48,6 +48,14 @@ def modulo(a : Value, b : Value) -> Value:
         return Rational(int(a) % int(b), 1)
     raise UndefinedError("modulo undefined")
 
+@unpack_variables
+def power(a : Value, b : Value) -> Value:
+    if isinstance(a, ComplexNumber) and isinstance(b, ComplexNumber):
+        if a.is_zero() and not b.is_positive():
+            raise UndefinedError("zero can only be raised to a positive power")
+        return a ** b
+    raise UndefinedError("exponentiation undefined")
+
 def add_parameter(a : Value, b : Value) -> Value:
     if isinstance(b, Parameters):
         raise UndefinedError("cannot add parameters from the right")
@@ -74,3 +82,11 @@ def neg(a : Value) -> Value:
     if isinstance(a, ComplexNumber):
         return -a
     raise UndefinedError("negative operation failed")
+
+def assign_to_variable(a : Value, b : Value) -> Value:
+    if isinstance(b, Variable):
+        b = b.get_value()
+    if isinstance(a, Variable) and isinstance(b, ComplexNumber):
+        a.set_value(b)
+        return b
+    raise UndefinedError("variable assignment failed")
