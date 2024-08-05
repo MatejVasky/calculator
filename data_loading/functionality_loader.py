@@ -17,6 +17,7 @@ def load_functionality(stream : TextIOBase) -> FunctionalityDatabase:
         function_bracket = data["function_bracket"]
         decimal_point = data["decimal_point"]
 
+        whitespace_characters = set(data["whitespace_characters"])
         letters = set(data["letters"])
         digits = set(data["digits"])
         punctuation = set(data["punctuation"])
@@ -24,7 +25,7 @@ def load_functionality(stream : TextIOBase) -> FunctionalityDatabase:
         parse_int = getattr(packages[data["int_parser"]["package"]], data["int_parser"]["function"])
         parse_decimal = getattr(packages[data["decimal_parser"]["package"]], data["decimal_parser"]["function"])
 
-        fd = FunctionalityDatabase(implicit_operation, function_application_operator, function_bracket, decimal_point, letters, digits, punctuation, parse_int, parse_decimal)
+        fd = FunctionalityDatabase(implicit_operation, function_application_operator, function_bracket, decimal_point, whitespace_characters, letters, digits, punctuation, parse_int, parse_decimal)
 
         if "binary_operations" in data:
             load_binary_operations(fd, packages, data["binary_operations"])
@@ -53,7 +54,13 @@ def load_packages(package_names) -> dict[str, ModuleType]:
 def load_binary_operations(fd : FunctionalityDatabase, packages : dict[str, ModuleType], operations) -> None:
     for op in operations:
         evaluate = getattr(packages[op["package"]], op["function"])
-        fd.register_operation(BinaryOperation(op["priority"], op["symbol"], op["token"], evaluate))
+
+        if "banned_after" in op:
+            banned_after = op["banned_after"]
+        else:
+            banned_after = []
+
+        fd.register_operation(BinaryOperation(op["priority"], op["symbol"], op["token"], banned_after, evaluate))
 
 def load_prefix_unary_operations(fd : FunctionalityDatabase, packages : dict[str, ModuleType], operations) -> None:
     for op in operations:

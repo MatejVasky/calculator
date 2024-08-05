@@ -1,6 +1,6 @@
 from typing import List
 from arithmetic_expressions.functionality_database import FunctionalityDatabase
-from arithmetic_expressions.functionality_database.exceptions import ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError, IsolatedDecimalPointError
+from arithmetic_expressions.functionality_database.exceptions import ImplicitMultiplicationError, InvalidCharacterError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError, IsolatedDecimalPointError
 
 NONE = 0
 INT = 1
@@ -25,7 +25,7 @@ class ExpressionParser:
 
         for c in expression:
             if state == NONE:
-                if c == ' ':
+                if self.fd.is_whitespace(c):
                     pass
                 elif self.fd.is_letter(c):
                     if prev_word != None:
@@ -61,8 +61,10 @@ class ExpressionParser:
                         self.process_text(tokens, prev_word, c)
                         prev_word = None
                     self.process_right_bracket(tokens, brackets, c)
+                else:
+                    raise InvalidCharacterError
             elif state == INT:
-                if c == ' ':
+                if self.fd.is_whitespace(c):
                     pass
                 elif self.fd.is_letter(c):
                     self.process_number(tokens, word)
@@ -87,8 +89,10 @@ class ExpressionParser:
                     word = ''
                     self.process_right_bracket(tokens, brackets, c)
                     state = NONE
+                else:
+                    raise InvalidCharacterError
             elif state == FLOAT:
-                if c == ' ':
+                if self.fd.is_whitespace(c):
                     pass
                 elif self.fd.is_letter(c):
                     self.process_number(tokens, word)
@@ -112,8 +116,10 @@ class ExpressionParser:
                     word = ''
                     self.process_right_bracket(tokens, brackets, c)
                     state = NONE
+                else:
+                    raise InvalidCharacterError
             elif state == TEXT:
-                if c == ' ':
+                if self.fd.is_whitespace(c):
                     prev_word = word
                     word = ''
                     state = NONE
@@ -137,8 +143,10 @@ class ExpressionParser:
                     word = ''
                     self.process_right_bracket(tokens, brackets, c)
                     state = NONE
+                else:
+                    raise InvalidCharacterError
             elif state == OPERATOR:
-                if c == ' ':
+                if self.fd.is_whitespace(c):
                     self.process_operator(tokens, word)
                     word = ''
                     state = NONE
@@ -166,6 +174,8 @@ class ExpressionParser:
                     word = ''
                     self.process_right_bracket(tokens, brackets, c)
                     state = NONE
+                else:
+                    raise InvalidCharacterError
 
         if state == NONE:
             if prev_word != None:

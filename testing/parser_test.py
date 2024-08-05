@@ -1,6 +1,6 @@
 from arithmetic_expressions.parsing import ExpressionParser
 from arithmetic_expressions.functionality_database import FunctionalityDatabase, BinaryOperation, PrefixUnaryOperation, Function
-from arithmetic_expressions.functionality_database.exceptions import ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError, IsolatedDecimalPointError
+from arithmetic_expressions.functionality_database.exceptions import InvalidCharacterError, ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError, IsolatedDecimalPointError
 from functionality.std import Rational
 import unittest
 
@@ -285,7 +285,7 @@ class ParserTest(unittest.TestCase):
         self.assertListEqual(tokens, [])
     def test_parse_expression_whitespace(self):
         parser = ExpressionParser(create_fd())
-        tokens = parser.parse_expression('    ')
+        tokens = parser.parse_expression('   \t ')
         self.assertListEqual(tokens, [])
     def test_parse_expression_int(self):
         parser = ExpressionParser(create_fd())
@@ -489,25 +489,30 @@ class ParserTest(unittest.TestCase):
         parser = ExpressionParser(create_fd())
         with self.assertRaises(BracketsMismatchError):
             parser.parse_expression('((x+y)  ')
+    def test_parse_expression_invalid_character(self):
+        parser = ExpressionParser(create_fd())
+        with self.assertRaises(InvalidCharacterError):
+            parser.parse_expression('((x+y)  ř)')
 
+WHITESPACE_CHARS = set([' ', '\t', '\r', '\n'])
 LETTERS = set([chr(i) for i in range(ord('A'), ord('Z') + 1)] + [chr(i) for i in range(ord('a'), ord('z') + 1)])
 DIGITS = set([str(i) for i in range(10)])
 PUNCTUATION = set(['+', '-', '*', '/', '%', ','])
 
 def create_fd() -> FunctionalityDatabase:
-    fd = FunctionalityDatabase(' ', '()', '(', '.', LETTERS, DIGITS, PUNCTUATION, None, None)
+    fd = FunctionalityDatabase(' ', '()', '(', '.', WHITESPACE_CHARS, LETTERS, DIGITS, PUNCTUATION, None, None)
 
-    fd.register_operation(BinaryOperation(1, '+', '+', None))
-    fd.register_operation(BinaryOperation(1, '-', '-', None))
-    fd.register_operation(BinaryOperation(1, '*', '*', None))
-    fd.register_operation(BinaryOperation(1, '/', '/', None))
-    fd.register_operation(BinaryOperation(1, '//', '//', None))
-    fd.register_operation(BinaryOperation(1, '%', '%', None))
+    fd.register_operation(BinaryOperation(1, '+', '+', [], None))
+    fd.register_operation(BinaryOperation(1, '-', '-', [], None))
+    fd.register_operation(BinaryOperation(1, '*', '*', [], None))
+    fd.register_operation(BinaryOperation(1, '/', '/', [], None))
+    fd.register_operation(BinaryOperation(1, '//', '//', [], None))
+    fd.register_operation(BinaryOperation(1, '%', '%', [], None))
     fd.register_operation(PrefixUnaryOperation(1, '+', '+u', None))
     fd.register_operation(PrefixUnaryOperation(1, '-', '-u', None))
-    fd.register_operation(BinaryOperation(1, None, ' ', None))
-    fd.register_operation(BinaryOperation(1, ',', ',', None))
-    fd.register_operation(BinaryOperation(1, None, '()', None))
+    fd.register_operation(BinaryOperation(1, None, ' ', ['/', '//', '%'], None))
+    fd.register_operation(BinaryOperation(1, ',', ',', [], None))
+    fd.register_operation(BinaryOperation(1, None, '()', [], None))
 
     fd.register_bracket('(', ')')
     fd.register_bracket('[', ']')

@@ -28,5 +28,9 @@ while True:
                 print("An error occurred:", e)
             else:
                 print(f'Result: {res}')
+                
+                approx = res.get_approximate_value()
+                if approx != None:
+                    print(f'Approximate result: {approx}')
 
     print()

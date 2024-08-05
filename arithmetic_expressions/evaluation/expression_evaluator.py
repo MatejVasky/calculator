@@ -1,6 +1,6 @@
 from typing import List, Optional
 from arithmetic_expressions.functionality_database import FunctionalityDatabase, Value, Variable, Operation, PrefixUnaryOperation, BinaryOperation
-from arithmetic_expressions.functionality_database.exceptions import InvalidTokensError
+from arithmetic_expressions.functionality_database.exceptions import InvalidTokensError, BannedSequenceOfOperationsError
 
 class ExpressionEvaluator():
     def __init__(self, fd : 'FunctionalityDatabase'):
@@ -53,6 +53,8 @@ class ExpressionEvaluator():
     
     def __process_binary_operator(self, op : 'BinaryOperation', results : List['Value'], operations : List['OpEntry']) -> None:
         while len(operations) != 0 and operations[-1].priority >= op.priority:
+            if op.is_banned_after(operations[-1].op):
+                raise BannedSequenceOfOperationsError()
             self.__evaluate_top_operation(results, operations)
         operations.append(OpEntry(op, op.priority))
     

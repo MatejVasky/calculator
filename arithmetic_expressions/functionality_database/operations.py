@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from typing import Callable, Optional, List
 from .value import Value
 from .exceptions import EvaluationError, FunctionOrOperationEvaluationError
 
@@ -20,9 +20,17 @@ class Operation():
 
 class BinaryOperation(Operation):
     """A base class for binary operations"""
-    def __init__(self, priority : int, symbol : Optional[str], token : str, evaluate : Callable[[Value, Value], Value]):
+    def __init__(self, priority : int, symbol : Optional[str], token : str, banned_after : List[str], evaluate : Callable[[Value, Value], Value]):
         """A constructor for the BinaryOperation class"""
         super().__init__(priority, symbol, token)
+
+        if not isinstance(banned_after, list):
+            raise TypeError("banned_after must be a list")
+        for op in banned_after:
+            if not isinstance(op, str):
+                raise TypeError("banned_after elements must be of type str")
+
+        self.__banned_after = banned_after
         self.__evaluate = evaluate
     
     def evaluate(self, a : Value, b : Value):
@@ -38,6 +46,12 @@ class BinaryOperation(Operation):
                 raise FunctionOrOperationEvaluationError(e)
         else:
             return res
+    
+    def is_banned_after(self, operation : 'Operation'):
+        """Returns True, if self is not allowed after operation"""
+        return isinstance(operation, BinaryOperation) and \
+            self.priority == operation.priority and \
+            operation.token in self.__banned_after
 
 class PrefixUnaryOperation(Operation):
     """A base class for prefix unary operations"""

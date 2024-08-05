@@ -1,5 +1,6 @@
-from datastructures import gcd, pow_by_squaring, get_int_nth_root
+from datastructures import gcd
 from .complex_number import ComplexNumber
+from typing import Union
 
 class ComplexRational(ComplexNumber):
     """A class for complex rationals, i.e. numbers a + bi, where a and b are rational"""
@@ -28,6 +29,12 @@ class ComplexRational(ComplexNumber):
     
     def __repr__(self) -> str:
         return f"ComplexRational({self.a}, {self.b}, {self.c}, {self.d})"
+    
+    def get_approximate_value(self) -> Union['Decimal', 'ComplexDecimal']:
+        if self.is_gaussian_int():
+            return None
+        else:
+            return self.to_decimal()
     
     def is_real(self) -> bool:
         return self.c == 0
@@ -158,26 +165,6 @@ class ComplexRational(ComplexNumber):
         elif isinstance(value, ComplexDecimal):
             return self.to_decimal() * value
         return NotImplemented
-    
-    # def __pow__(self, value : object) -> ComplexNumber:
-    #     if isinstance(value, ComplexNumber):
-    #         if value.is_int():
-    #             if value.is_positive():
-    #                 return pow_by_squaring(self, int(value))
-    #             elif value.is_zero():
-    #                 return Rational(1, 1)
-    #             else:
-    #                 return pow_by_squaring(self.inv(), -int(value))
-    #         elif self.is_rational() and value.is_rational():
-    #             num_root = get_int_nth_root(value.denominator(), self.numerator())
-    #             den_root = get_int_nth_root(value.denominator(), self.denominator())
-    #             if num_root == None or den_root == None:
-    #                 return (self.log() * value).exp()
-    #             else:
-    #                 return Rational(num_root ** value.numerator(), den_root ** value.numerator())
-    #         else:
-    #             return (self.log() * value).exp()
-    #     return NotImplemented
     
     def __str__(self) -> str:
         r = str(self.a) if self.b == 1 else f"{self.a}/{self.b}"

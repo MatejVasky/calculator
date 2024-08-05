@@ -5,54 +5,79 @@ import unittest
 
 class OperationTest(unittest.TestCase):
     def test_binary_operation_init1(self):
-        addition = BinaryOperation(1, '+', '+b', test_addition)
+        addition = BinaryOperation(1, '+', '+b', [], test_addition)
         self.assertEqual(addition.priority, 1)
         self.assertEqual(addition.symbol, '+')
         self.assertEqual(addition.token, '+b')
+        self.assertListEqual(addition._BinaryOperation__banned_after, [])
         self.assertEqual(addition._BinaryOperation__evaluate, test_addition)
     def test_binary_operation_init2(self):
-        op = BinaryOperation(1, None, '+b', test_addition)
+        op = BinaryOperation(1, None, '+b', ['-'], test_addition)
         self.assertEqual(op.priority, 1)
         self.assertEqual(op.symbol, None)
         self.assertEqual(op.token, '+b')
+        self.assertListEqual(op._BinaryOperation__banned_after, ['-'])
         self.assertEqual(op._BinaryOperation__evaluate, test_addition)
     def test_binary_operation_init_wrong_type1(self):
         with self.assertRaises(TypeError):
-            BinaryOperation('1', '+', '+b', test_addition)
+            BinaryOperation('1', '+', '+b', [], test_addition)
     def test_binary_operation_init_wrong_type2(self):
         with self.assertRaises(TypeError):
-            BinaryOperation(1, 2, '+b', test_addition)
+            BinaryOperation(1, 2, '+b', [], test_addition)
     def test_binary_operation_init_wrong_type3(self):
         with self.assertRaises(TypeError):
-            BinaryOperation(1, '+', 3, test_addition)
+            BinaryOperation(1, '+', 3, [], test_addition)
+    def test_binary_operation_init_wrong_type4(self):
+        with self.assertRaises(TypeError):
+            BinaryOperation(1, '+', 3, 'a', test_addition)
+    def test_binary_operation_init_wrong_type5(self):
+        with self.assertRaises(TypeError):
+            BinaryOperation(1, '+', 3, ['a', 1], test_addition)
     
     def test_binary_operation_evaluate(self):
-        addition = BinaryOperation(1, '+', '+b', test_addition)
+        addition = BinaryOperation(1, '+', '+b', [], test_addition)
         self.assertEqual(addition.evaluate(Rational(1, 2), Rational(1, 3)), Rational(5, 6))
     def test_binary_operation_evaluate_unpacking_variable(self):
-        addition = BinaryOperation(1, '+', '+b', test_addition)
+        addition = BinaryOperation(1, '+', '+b', [], test_addition)
         self.assertEqual(addition.evaluate(Variable('x', Rational(1, 2)), Variable('y', Rational(1, 3))), Rational(5, 6))
     def test_binary_operation_evaluate_wrong_type1(self):
-        addition = BinaryOperation(1, '+', '+b', test_addition)
+        addition = BinaryOperation(1, '+', '+b', [], test_addition)
         with self.assertRaises(TypeError):
             addition.evaluate(1, Rational(1, 4))
     def test_binary_operation_evaluate_wrong_type2(self):
-        addition = BinaryOperation(1, '+', '+b', test_addition)
+        addition = BinaryOperation(1, '+', '+b', [], test_addition)
         with self.assertRaises(TypeError):
             addition.evaluate(Rational(1, 4), 1)
     def test_binary_operation_evaluate_not_unpacking_variable(self):
-        assignment = BinaryOperation(0, ':=', ':=', test_assignment)
+        assignment = BinaryOperation(0, ':=', ':=', [], test_assignment)
         x = Variable('x', Rational(1, 1))
         assignment.evaluate(x, Rational(3, 5))
         self.assertEqual(x.get_value(), Rational(3, 5))
     def test_binary_operation_evaluate_evaluation_error_handling(self):
-        assignment = BinaryOperation(0, ':=', ':=', test_assignment)
+        assignment = BinaryOperation(0, ':=', ':=', [], test_assignment)
         with self.assertRaises(EvaluationError):
             assignment.evaluate(Rational(1, 3), Rational(2, 5))
     def test_binary_operation_evaluate_other_error_handling(self):
-        addition = BinaryOperation(1, '+', '+b', test_addition)
+        addition = BinaryOperation(1, '+', '+b', [], test_addition)
         with self.assertRaises(FunctionOrOperationEvaluationError):
             addition.evaluate(Function('f', test_function), Rational(1, 5))
+    
+    def test_binary_operation_is_banned_after_true(self):
+        op1 = BinaryOperation(1, '*', '*', [], None)
+        op2 = BinaryOperation(1, None, ' ', ['*'], None)
+        self.assertTrue(op2.is_banned_after(op1))
+    def test_binary_operation_is_banned_after_wrong_token(self):
+        op1 = BinaryOperation(1, '/', '/', [], None)
+        op2 = BinaryOperation(1, None, ' ', ['*'], None)
+        self.assertFalse(op2.is_banned_after(op1))
+    def test_binary_operation_is_banned_after_different_priorities(self):
+        op1 = BinaryOperation(1, '*', '*', [], None)
+        op2 = BinaryOperation(2, None, ' ', ['*'], None)
+        self.assertFalse(op2.is_banned_after(op1))
+    def test_binary_operation_is_banned_after_prefix_unary_operation(self):
+        op1 = PrefixUnaryOperation(1, '-', '-u', None)
+        op2 = BinaryOperation(2, None, ' ', ['*'], None)
+        self.assertFalse(op2.is_banned_after(op1))
     
     def test_prefix_unary_operation_init1(self):
         neg = PrefixUnaryOperation(1, '-', '-u', test_neg)

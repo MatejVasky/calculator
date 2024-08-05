@@ -7,6 +7,7 @@
     "function_application_operator": "()",
     "function_bracket": "(",
     "decimal_point": ".",
+    "whitespace_characters": [" ", "\t", "\r", "\n"],
     "letters": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
     "digits": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
     "punctuation": ["+", "-", "*", "/", "%", "^", ",", ":", "="],
@@ -81,7 +82,8 @@
             "symbol": null,
             "token": " ",
             "package": "std",
-            "function": "multiply"
+            "function": "multiply",
+            "banned_after": ["/", "//", "%"]
         },
         {
             "priority": 4,
@@ -133,10 +135,15 @@
             "name": "i",
             "package": "std",
             "value": "i"
+        },
+        {
+            "name": "e",
+            "package": "std",
+            "value": "e"
         }
     ],
 
-    "variables": ["a", "b", "c", "d", "e", "f", "g", "h", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
+    "variables": ["a", "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
 
     "functions": [
         {

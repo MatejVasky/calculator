@@ -39,3 +39,8 @@ class InvalidTokensError(EvaluationError):
     """An error for when the list of tokens is invalid"""
     def __init__(self):
         super().__init__("invalid tokens")
+
+class BannedSequenceOfOperationsError(EvaluationError):
+    """An error for when a sequence of operations is not allowed"""
+    def __init__(self):
+        super().__init__("a sequence of operations is not allowed")

@@ -133,13 +133,6 @@ class Decimal(ComplexNumber):
             return ComplexDecimal(self.val * value.a, self.val * value.b)
         return NotImplemented
     
-    # def __pow__(self, value : object) -> ComplexNumber:
-    #     if isinstance(value, ComplexNumber):
-    #         if self.is_zero():
-    #             return ComplexDecimal(0, 0)
-    #         return (self.log() * value).exp()
-    #     return NotImplemented
-    
     def __str__(self) -> str:
         return str(self.val)
     

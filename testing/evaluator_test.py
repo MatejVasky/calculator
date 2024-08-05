@@ -2,7 +2,8 @@ import unittest
 from arithmetic_expressions.evaluation import ExpressionEvaluator
 from arithmetic_expressions.evaluation.expression_evaluator import OpEntry
 from arithmetic_expressions.functionality_database import FunctionalityDatabase, BinaryOperation, PrefixUnaryOperation, Function
-from functionality.std import Rational, ComplexRational, Decimal, ComplexDecimal
+from arithmetic_expressions.functionality_database.exceptions import BannedSequenceOfOperationsError
+from functionality.std import Rational, Decimal
 import functionality.std
 import math
 
@@ -164,7 +165,7 @@ class EvaluatorTest(unittest.TestCase):
     def test_process_binary_operator9(self):
         fd = create_fd()
         fd.register_operation(PrefixUnaryOperation(2, '/', '/u', lambda x: x.inv()))
-        fd.register_operation(BinaryOperation(3, '**', '^', lambda x, y: Decimal(math.exp(float(y) * math.log(float(x))))))
+        fd.register_operation(BinaryOperation(3, '**', '^', [], lambda x, y: Decimal(math.exp(float(y) * math.log(float(x))))))
         evaluator = ExpressionEvaluator(fd)
         operations = [OpEntry(fd.operations['-u'], 1), OpEntry(fd.operations['/u'], 2), OpEntry(fd.operations['-u'], 2), OpEntry(fd.operations['^'], 3), OpEntry(fd.operations['-u'], 3)]
         results = [Rational(2, 1), Rational(3, 1)]
@@ -183,7 +184,7 @@ class EvaluatorTest(unittest.TestCase):
     def test_process_binary_operator10(self):
         fd = create_fd()
         fd.register_operation(PrefixUnaryOperation(2, '/', '/u', lambda x: x.inv()))
-        fd.register_operation(BinaryOperation(3, '**', '^', lambda x, y: Decimal(math.exp(float(y) * math.log(float(x))))))
+        fd.register_operation(BinaryOperation(3, '**', '^', [], lambda x, y: Decimal(math.exp(float(y) * math.log(float(x))))))
         evaluator = ExpressionEvaluator(fd)
         operations = [OpEntry(fd.operations['-u'], 1), OpEntry(fd.operations['/u'], 2), OpEntry(fd.operations['-u'], 2), OpEntry(fd.operations['^'], 3), OpEntry(fd.operations['-u'], 3)]
         results = [Rational(2, 1), Rational(3, 1)]
@@ -198,7 +199,7 @@ class EvaluatorTest(unittest.TestCase):
     def test_process_binary_operator11(self):
         fd = create_fd()
         fd.register_operation(PrefixUnaryOperation(2, '/', '/u', lambda x: x.inv()))
-        fd.register_operation(BinaryOperation(3, '**', '^', lambda x, y: Decimal(math.exp(float(y) * math.log(float(x))))))
+        fd.register_operation(BinaryOperation(3, '**', '^', [], lambda x, y: Decimal(math.exp(float(y) * math.log(float(x))))))
         evaluator = ExpressionEvaluator(fd)
         operations = [OpEntry(fd.operations['-u'], 1), OpEntry(fd.operations['/u'], 2), OpEntry(fd.operations['-u'], 2), OpEntry(fd.operations['^'], 3), OpEntry(fd.operations['-u'], 3)]
         results = [Rational(2, 1), Rational(3, 1)]
@@ -222,6 +223,36 @@ class EvaluatorTest(unittest.TestCase):
         self.assertEqual(operations[2].op, fd.operations['+'])
         self.assertEqual(operations[2].priority, 1)
         self.assertListEqual(results, [Rational(6, 1)])
+    def test_process_binary_operator_banned_sequence1(self):
+        fd = create_fd()
+        evaluator = ExpressionEvaluator(fd)
+        operations = [OpEntry(fd.operations['+'], 1), OpEntry(fd.operations['/'], 2)]
+        results = [Rational(2, 1), Rational(3, 1), Rational(4, 1)]
+        with self.assertRaises(BannedSequenceOfOperationsError):
+            evaluator._ExpressionEvaluator__process_binary_operator(fd.operations[' '], results, operations)
+    def test_process_binary_operator_banned_sequence2(self):
+        fd = create_fd()
+        evaluator = ExpressionEvaluator(fd)
+        operations = [OpEntry(fd.operations['+'], 1), OpEntry(fd.operations['/'], 2), OpEntry(fd.operations['()'], 3)]
+        results = [Rational(2, 1), Rational(3, 1), fd.constants['sin'], Rational(4, 1)]
+        with self.assertRaises(BannedSequenceOfOperationsError):
+            evaluator._ExpressionEvaluator__process_binary_operator(fd.operations[' '], results, operations)
+    def test_process_binary_operator_banned_sequence3(self):
+        fd = create_fd()
+        evaluator = ExpressionEvaluator(fd)
+        operations = [OpEntry(fd.operations['+'], 1), OpEntry(fd.operations['/'], 2), OpEntry(None, -1)]
+        results = [Rational(2, 1), Rational(3, 1), Rational(4, 1)]
+        evaluator._ExpressionEvaluator__process_binary_operator(fd.operations[' '], results, operations)
+        self.assertEqual(len(operations), 4)
+        self.assertEqual(operations[0].op, fd.operations['+'])
+        self.assertEqual(operations[0].priority, 1)
+        self.assertEqual(operations[1].op, fd.operations['/'])
+        self.assertEqual(operations[1].priority, 2)
+        self.assertEqual(operations[2].op, None)
+        self.assertEqual(operations[2].priority, -1)
+        self.assertEqual(operations[3].op, fd.operations[' '])
+        self.assertEqual(operations[3].priority, 2)
+        self.assertListEqual(results, [Rational(2, 1), Rational(3, 1), Rational(4, 1)])
 
     def test_process_right_bracket1(self):
         fd = create_fd()
@@ -287,25 +318,31 @@ class EvaluatorTest(unittest.TestCase):
         fd = create_fd()
         evaluator = ExpressionEvaluator(fd)
         self.assertAlmostEqual(float(evaluator.evaluate(['5', ' ', 'sin', '()', '(', 'pi', '/', '2', ')'])), 5 * math.sin(11/7), places=2)
+    def test_evaluate_banned_sequence_of_operations(self):
+        fd = create_fd()
+        evaluator = ExpressionEvaluator(fd)
+        with self.assertRaises(BannedSequenceOfOperationsError):
+            evaluator.evaluate(['5', '/', '2', ' ', '3'])
 
+WHITESPACE_CHARS = set([' ', '\t', '\r', '\n'])
 LETTERS = set([chr(i) for i in range(ord('A'), ord('Z') + 1)] + [chr(i) for i in range(ord('a'), ord('z') + 1)])
 DIGITS = set([str(i) for i in range(10)])
 PUNCTUATION = set(['+', '-', '*', '/', '%', ','])
 
 def create_fd() -> FunctionalityDatabase:
-    fd = FunctionalityDatabase(' ', '()', '(', '.', LETTERS, DIGITS, PUNCTUATION, functionality.std.parse_int, functionality.std.parse_decimal)
+    fd = FunctionalityDatabase(' ', '()', '(', '.', WHITESPACE_CHARS, LETTERS, DIGITS, PUNCTUATION, functionality.std.parse_int, functionality.std.parse_decimal)
 
-    fd.register_operation(BinaryOperation(1, '+', '+', functionality.std.add))
-    fd.register_operation(BinaryOperation(1, '-', '-', functionality.std.subtract))
-    fd.register_operation(BinaryOperation(2, '*', '*', functionality.std.multiply))
-    fd.register_operation(BinaryOperation(2, '/', '/', functionality.std.divide))
-    fd.register_operation(BinaryOperation(2, '//', '//', functionality.std.floordivide))
-    fd.register_operation(BinaryOperation(2, '%', '%', functionality.std.modulo))
+    fd.register_operation(BinaryOperation(1, '+', '+', [], functionality.std.add))
+    fd.register_operation(BinaryOperation(1, '-', '-', [], functionality.std.subtract))
+    fd.register_operation(BinaryOperation(2, '*', '*', [], functionality.std.multiply))
+    fd.register_operation(BinaryOperation(2, '/', '/', [], functionality.std.divide))
+    fd.register_operation(BinaryOperation(2, '//', '//', [], functionality.std.floordivide))
+    fd.register_operation(BinaryOperation(2, '%', '%', [], functionality.std.modulo))
     fd.register_operation(PrefixUnaryOperation(1, '+', '+u', functionality.std.pos))
     fd.register_operation(PrefixUnaryOperation(1, '-', '-u', functionality.std.neg))
-    fd.register_operation(BinaryOperation(2, None, ' ', functionality.std.multiply))
-    fd.register_operation(BinaryOperation(0, ',', ',', functionality.std.add_parameter))
-    fd.register_operation(BinaryOperation(3, None, '()', functionality.std.evaluate_function))
+    fd.register_operation(BinaryOperation(2, None, ' ', ['/', '//', '%'], functionality.std.multiply))
+    fd.register_operation(BinaryOperation(0, ',', ',', [], functionality.std.add_parameter))
+    fd.register_operation(BinaryOperation(3, None, '()', [], functionality.std.evaluate_function))
 
     fd.register_bracket('(', ')')
     fd.register_bracket('[', ']')
