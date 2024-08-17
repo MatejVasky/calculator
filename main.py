@@ -3,12 +3,17 @@ from arithmetic_expressions.evaluation import ExpressionEvaluator
 from arithmetic_expressions.functionality_database.exceptions import ParsingError, EvaluationError
 from data_loading import load_functionality
 
+print("Welcome to calculator", end="\n\n")
+
+print("Loading functionality...")
 try:
     with open("data/functionality/default.json") as file:
         fd = load_functionality(file)
 except:
     print("Failed to load functionality")
+    input("Press enter to close the program")
     quit()
+print("Functionality loaded", end="\n\n")
 
 parser = ExpressionParser(fd)
 evaluator = ExpressionEvaluator(fd)

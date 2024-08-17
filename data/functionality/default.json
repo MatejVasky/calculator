@@ -277,6 +277,11 @@
             "function": "gcd"
         },
         {
+            "name": "gcf",
+            "package": "std",
+            "function": "gcd"
+        },
+        {
             "name": "lcm",
             "package": "std",
             "function": "lcm"
