@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Optional
 from .value import Value
 from .parameters import Parameters
 from .exceptions import EvaluationError, FunctionOrOperationEvaluationError
@@ -28,4 +28,7 @@ class Function(Value):
             else:
                 raise FunctionOrOperationEvaluationError(e)
         else:
-            return res
+            if isinstance(res, Value):
+                return res
+            else:
+                raise FunctionOrOperationEvaluationError(TypeError("evaluate must return object of type Value or None"))

@@ -61,6 +61,14 @@ class OperationTest(unittest.TestCase):
         addition = BinaryOperation(1, '+', '+b', [], test_addition)
         with self.assertRaises(FunctionOrOperationEvaluationError):
             addition.evaluate(Function('f', test_function), Rational(1, 5))
+    def test_binary_operation_evaluate_returns_int(self):
+        op = BinaryOperation(1, '+', '+b', [], test_binary_int)
+        with self.assertRaises(FunctionOrOperationEvaluationError):
+            op.evaluate(Function('f', test_function), Rational(1, 5))
+    def test_binary_operation_evaluate_returns_none(self):
+        op = BinaryOperation(1, '+', '+b', [], test_binary_none)
+        with self.assertRaises(FunctionOrOperationEvaluationError):
+            op.evaluate(Function('f', test_function), Rational(1, 5))
     
     def test_binary_operation_is_banned_after_true(self):
         op1 = BinaryOperation(1, '*', '*', [], None)
@@ -124,6 +132,14 @@ class OperationTest(unittest.TestCase):
         neg = PrefixUnaryOperation(1, '-', '-u', test_neg)
         with self.assertRaises(FunctionOrOperationEvaluationError):
             neg.evaluate(Function('f', test_function))
+    def test_prefix_unary_operation_evaluate_returns_int(self):
+        op = PrefixUnaryOperation(1, '-', '-u', test_unary_int)
+        with self.assertRaises(FunctionOrOperationEvaluationError):
+            op.evaluate(Rational(1, 5))
+    def test_prefix_unary_operation_evaluate_returns_none(self):
+        op = PrefixUnaryOperation(1, '-', '-u', test_unary_none)
+        with self.assertRaises(FunctionOrOperationEvaluationError):
+            op.evaluate(Rational(1, 5))
     
 @unpack_variables
 def test_addition(a : Value, b : Value):
@@ -135,6 +151,7 @@ def test_assignment(a : Value, b : Value):
     if isinstance(b, Variable):
         b = b.get_value()
     a.set_value(b)
+    return b
 
 @unpack_variables
 def test_neg(a : Value):
@@ -144,11 +161,24 @@ def test_increment(a : Value):
     if not isinstance(a, Variable):
         raise EvaluationError('not a variable')
     a.set_value(a.get_value() + Rational(1, 1))
+    return a.get_value()
 
 def test_function(*args):
     if len(args) == 0:
         raise EvaluationError('hello')
     return args[0]
+
+def test_binary_int(a : Value, b : Value):
+    return 1
+
+def test_binary_none(a : Value, b : Value):
+    return None
+
+def test_unary_int(a : Value):
+    return 1
+
+def test_unary_none(a : Value):
+    return None
 
 if __name__ == "__main__":
     unittest.main()

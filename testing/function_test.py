@@ -43,7 +43,14 @@ class FunctionTest(unittest.TestCase):
         f = Function('f', test_function4)
         with self.assertRaises(FunctionOrOperationEvaluationError):
             f.evaluate(Parameters())
-    
+    def test_function_evaluate_returns_none(self):
+        f = Function('f', test_function5)
+        with self.assertRaises(FunctionOrOperationEvaluationError):
+            f.evaluate(Parameters())
+    def test_function_evaluate_returns_wrong_type(self):
+        f = Function('f', test_function6)
+        with self.assertRaises(FunctionOrOperationEvaluationError):
+            f.evaluate(Parameters())
 
 @unpack_variables
 def test_function(*args):
@@ -63,6 +70,12 @@ def test_function3(*args):
 
 def test_function4(*args):
     return args[0]
+
+def test_function5(*args):
+    return None
+
+def test_function6(*args):
+    return 1
 
 
 if __name__ == "__main__":

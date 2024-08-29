@@ -118,9 +118,11 @@ WHITESPACE_CHARS = set([' ', '\t', '\r', '\n'])
 LETTERS = set([chr(i) for i in range(ord('A'), ord('Z') + 1)] + [chr(i) for i in range(ord('a'), ord('z') + 1)])
 DIGITS = set([str(i) for i in range(10)])
 PUNCTUATION = set(['+', '-', '*', '/', '%', ','])
+IMPLICIT_OPERATION = BinaryOperation(2, None, ' ', ['/', '//', '%'], functionality.std.multiply)
+FUNCTION_APPLICATION_OPERATION = BinaryOperation(3, None, '()', [], functionality.std.evaluate_function)
 
 def create_fd() -> FunctionalityDatabase:
-    fd = FunctionalityDatabase(' ', '()', '(', '.', WHITESPACE_CHARS, LETTERS, DIGITS, PUNCTUATION, functionality.std.parse_int, functionality.std.parse_decimal)
+    fd = FunctionalityDatabase(IMPLICIT_OPERATION, FUNCTION_APPLICATION_OPERATION, '(', ')', '.', WHITESPACE_CHARS, LETTERS, DIGITS, PUNCTUATION, functionality.std.parse_int, functionality.std.parse_decimal)
 
     fd.register_operation(BinaryOperation(1, '+', '+', [], functionality.std.add))
     fd.register_operation(BinaryOperation(1, '-', '-', [], functionality.std.subtract))
@@ -130,11 +132,8 @@ def create_fd() -> FunctionalityDatabase:
     fd.register_operation(BinaryOperation(2, '%', '%', [], functionality.std.modulo))
     fd.register_operation(PrefixUnaryOperation(1, '+', '+u', functionality.std.pos))
     fd.register_operation(PrefixUnaryOperation(1, '-', '-u', functionality.std.neg))
-    fd.register_operation(BinaryOperation(2, None, ' ', ['/', '//', '%'], functionality.std.multiply))
     fd.register_operation(BinaryOperation(0, ',', ',', [], functionality.std.add_parameter))
-    fd.register_operation(BinaryOperation(3, None, '()', [], functionality.std.evaluate_function))
 
-    fd.register_bracket('(', ')')
     fd.register_bracket('[', ']')
 
     fd.register_constant('pi', Rational(22, 7))

@@ -7,13 +7,15 @@ from .operations import Operation, BinaryOperation, PrefixUnaryOperation
 from .function import Function
 
 class FunctionalityDatabase:
-    def __init__(self, implicit_operation : str, function_application_operator : str, function_bracket : str, decimal_point : str, whitespace_chars : set[str], letters : set[str], digits : set[str], punctuation : set[str], parse_int : Callable[[str], Value], parse_decimal : Callable[[str], Value]):
-        if not isinstance(implicit_operation, str):
+    def __init__(self, implicit_operation : BinaryOperation, function_application_operation : BinaryOperation, function_bracket_left : str, function_bracket_right : str, decimal_point : str, whitespace_chars : set[str], letters : set[str], digits : set[str], punctuation : set[str], parse_int : Callable[[str], Value], parse_decimal : Callable[[str], Value]):
+        if not isinstance(implicit_operation, BinaryOperation):
             raise TypeError("implicit_operation must be of type str")
-        if not isinstance(function_application_operator, str):
+        if not isinstance(function_application_operation, BinaryOperation):
             raise TypeError("function_application_operator must be of type str")
-        if not isinstance(function_bracket, str):
-            raise TypeError("function_bracket must be of type str")
+        if not isinstance(function_bracket_left, str):
+            raise TypeError("function_bracket_left must be of type str")
+        if not isinstance(function_bracket_right, str):
+            raise TypeError("function_bracket_right must be of type str")
         if not isinstance(decimal_point, str):
             raise TypeError("decimal_point must be of type str")
         if not isinstance(whitespace_chars, set):
@@ -54,22 +56,15 @@ class FunctionalityDatabase:
                 raise TypeError("elements of punctuation must be of type str")
             if len(c) != 1:
                 raise ValueError("whitespace_chars, elements of punctuation must be of lengrh 1")
-        
+
         if len(decimal_point) != 1:
             raise ValueError("decimal_point must be of length 1")
         if decimal_point in whitespace_chars or decimal_point in letters or decimal_point in digits or decimal_point in punctuation:
             raise ValueError("decimal_point must not be in letters, digits or punctuation")
-        
-        if len(function_bracket) != 1:
-            raise ValueError("function_bracket must be of length 1")
-        if function_bracket in whitespace_chars or function_bracket in letters or function_bracket in digits or function_bracket in punctuation:
-            raise ValueError("function_bracket must not be in letters, digits, or punctuation")
-        if function_bracket == decimal_point or function_bracket == function_application_operator or function_bracket == implicit_operation:
-            raise ValueError("function_bracket must not equal decimal_point, function_application_operation or implicit_operation")
 
-        self.implicit_operation = implicit_operation
-        self.function_application_operator = function_application_operator
-        self.function_bracket = function_bracket
+        self.implicit_operator = implicit_operation.token
+        self.function_application_operator = function_application_operation.token
+        self.function_bracket = function_bracket_left
         self.decimal_point = decimal_point
         self.letters = letters
         self.digits = digits
@@ -88,16 +83,17 @@ class FunctionalityDatabase:
         self.pre_un_operators_trie : TrieNode[str] = TrieNode()
         self.constants_trie : TrieNode[str] = TrieNode()
         self.functions_trie : TrieNode[str] = TrieNode()
+
+        self.register_operation(implicit_operation)
+        self.register_operation(function_application_operation)
+        self.register_bracket(function_bracket_left, function_bracket_right)
     
     def register_operation(self, operation : Operation) -> None:
         """Adds the operation to the database"""
         if not isinstance(operation, Operation):
             raise TypeError("operation must be of type Operation")
-        # if operation.token in self.operations or operation.token in self.constants or operation.token in self.left_brackets or operation.token in self.right_brackets:
         if self.__is_token_registered(operation.token):
-            raise ValueError("Token already registered")
-        if operation.token == self.function_bracket:
-            raise ValueError("operation token must not be equal to function_bracket")
+            raise ValueError("token already registered")
         
         if operation.symbol != None:
             for c in operation.symbol:
@@ -118,21 +114,15 @@ class FunctionalityDatabase:
     def register_bracket(self, left : str, right : str) -> None:
         if not isinstance(left, str) or not isinstance(right, str):
             raise TypeError("left and right must be of type str")
-        # if left in self.operations or left in self.constants or left in self.left_brackets or left in self.right_brackets or \
-        #     right in self.operations or right in self.constants or right in self.left_brackets or right in self.right_brackets:
         if self.__is_token_registered(left) or self.__is_token_registered(right):
             raise ValueError("Token already registered")
         
         if len(left) != 1 or len(right) != 1:
             raise ValueError("left and right must be of length 1")
-        if self.is_letter(left) or self.is_digit(left) or left == self.decimal_point or self.is_punctuation(left):
-            raise ValueError("left must not be a letter, digit, decimal point or punctuation")
-        if self.is_letter(right) or self.is_digit(right) or right == self.decimal_point or self.is_punctuation(right):
-            raise ValueError("right must not be a letter, digit, decimal point or punctuation")
+        if not self.__can_be_bracket(left) or not self.__can_be_bracket(right):
+            raise ValueError("left and right must not be a whitespace characters, letters, digits, decimal point or punctuation")
         if left == right:
             raise ValueError("left and right must be different")
-        if left == self.implicit_operation or right == self.implicit_operation or left == self.function_application_operator or right == self.function_application_operator:
-            raise ValueError("left and right cannot be equal to implicit_operation or to function_application_operator")
         
         self.left_brackets[left] = None
         self.right_brackets[right] = left
@@ -141,11 +131,8 @@ class FunctionalityDatabase:
         """Adds the constant to the database"""
         if not isinstance(const_name, str) or not isinstance(value, Value):
             raise TypeError("const_name must be of type str and value must be of type Value")
-        # if const_name in self.operations or const_name in self.constants or const_name in self.left_brackets or const_name in self.right_brackets:
         if self.__is_token_registered(const_name):
             raise ValueError("Token already registered")
-        if const_name == self.implicit_operation or const_name == self.function_application_operator:
-            raise ValueError("const_name cannot be equal to implicit_operation or function_application_operator")
         
         for c in const_name:
             if not self.is_letter(c):
@@ -162,11 +149,8 @@ class FunctionalityDatabase:
         """Adds the function to the database"""
         if not isinstance(function, Function):
             raise TypeError("function must be of type Function")
-        # if function.name in self.operations or function.name in self.constants or function.name in self.left_brackets or function.name in self.right_brackets:
         if self.__is_token_registered(function.name):
             raise ValueError("Token already registered")
-        if function.name == self.implicit_operation or function.name == self.function_application_operator:
-            raise ValueError("function name cannot be equal to implicit_operation or to function_application_operator")
         
         for c in function.name:
             if not self.is_letter(c):
@@ -200,16 +184,30 @@ class FunctionalityDatabase:
         return c in self.right_brackets
     
     def is_int(self, token : str) -> bool:
-        """Checks if a given token is an integer. Assumes that token is a valid token"""
+        """Checks if a given token is an integer"""
         if not isinstance(token, str):
             return False
-        return token[0] in self.digits and not self.decimal_point in token
+        for c in token:
+            if not c in self.digits:
+                return False
+        return True
     
     def is_decimal(self, token : str) -> bool:
-        """Checks if a given token is a decimal number. Assumes that token is a valid token"""
+        """Checks if a given token is a decimal number"""
         if not isinstance(token, str):
             return False
-        return (token[0] in self.digits or token[0] == self.decimal_point) and self.decimal_point in token
+        if token == '.':
+            return False
+        
+        decimal_points = 0
+        for c in token:
+            if c == self.decimal_point:
+                decimal_points += 1
+                if decimal_points > 1:
+                    return False
+            elif not c in self.digits:
+                return False
+        return decimal_points == 1
     
     def is_constant(self, token : str) -> bool:
         """Checks if a given token is a constant"""
@@ -249,6 +247,10 @@ class FunctionalityDatabase:
             else:
                 raise ParserEvaluationError(e)
     
+    def __can_be_bracket(self, c : str) -> bool:
+        """Checks if a given character can be registered as a bracket. Returns True, if c is not a whitespace character, letter, digit, punctuation or the decimal point"""
+        return not self.is_whitespace(c) and not self.is_letter(c) and not c in self.digits and not self.is_punctuation(c) and c != self.decimal_point
+
     def __is_token_registered(self, token : str) -> bool:
         """Checks if a token is already registered"""
-        return token in self.operations or token in self.constants or token in self.left_brackets or token in self.right_brackets
+        return token in self.operations or token in self.constants or token in self.left_brackets or token in self.right_brackets or self.is_int(token) or self.is_decimal(token)

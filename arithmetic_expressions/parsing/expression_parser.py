@@ -208,7 +208,7 @@ class ExpressionParser:
         """Splits sequence of letters into individual tokens and adds them to tokens"""
         # Add implicit multiplication before, if necessary
         if self.needs_operation(tokens):
-            tokens.append(self.fd.implicit_operation)
+            tokens.append(self.fd.implicit_operator)
 
         # Find function name, if applicable
         if next_char == self.fd.function_bracket:
@@ -230,7 +230,7 @@ class ExpressionParser:
             # Add variable and implicit multiplication operator, if needed
             tokens.append(token)
             if token_end < len(word):
-                tokens.append(self.fd.implicit_operation)
+                tokens.append(self.fd.implicit_operator)
             token_start = token_end
         
         # Add the function from the end, if necessary
@@ -256,7 +256,7 @@ class ExpressionParser:
     def process_left_bracket(self, tokens : List[str], brackets : List[str], char : str) -> None:
         """Adds a left bracket to tokens"""
         if self.needs_operation(tokens):
-            tokens.append(self.fd.implicit_operation)
+            tokens.append(self.fd.implicit_operator)
         tokens.append(char)
         brackets.append(char)
 

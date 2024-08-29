@@ -3,9 +3,25 @@
         "std"
     ],
     
-    "implicit_operation": " ",
-    "function_application_operator": "()",
-    "function_bracket": "(",
+    "implicit_operation": {
+        "priority": 3,
+        "symbol": null,
+        "token": " ",
+        "package": "std",
+        "function": "multiply",
+        "banned_after": ["/", "//", "%"]
+    },
+    "function_application_operator": {
+        "priority": 5,
+        "symbol": null,
+        "token": "()",
+        "package": "std",
+        "function": "evaluate_function"
+    },
+    "function_bracket": {
+        "left": "(",
+        "right": ")"
+    },
     "decimal_point": ".",
     "whitespace_characters": [" ", "\t", "\r", "\n"],
     "letters": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
@@ -78,26 +94,11 @@
             "function": "modulo"
         },
         {
-            "priority": 3,
-            "symbol": null,
-            "token": " ",
-            "package": "std",
-            "function": "multiply",
-            "banned_after": ["/", "//", "%"]
-        },
-        {
             "priority": 4,
             "symbol": "^",
             "token": "^",
             "package": "std",
             "function": "power"
-        },
-        {
-            "priority": 5,
-            "symbol": null,
-            "token": "()",
-            "package": "std",
-            "function": "evaluate_function"
         }
     ],
 
@@ -115,13 +116,6 @@
             "token": "-u",
             "package": "std",
             "function": "neg"
-        }
-    ],
-
-    "brackets": [
-        {
-            "left": "(",
-            "right": ")"
         }
     ],
 

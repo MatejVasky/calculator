@@ -498,9 +498,11 @@ WHITESPACE_CHARS = set([' ', '\t', '\r', '\n'])
 LETTERS = set([chr(i) for i in range(ord('A'), ord('Z') + 1)] + [chr(i) for i in range(ord('a'), ord('z') + 1)])
 DIGITS = set([str(i) for i in range(10)])
 PUNCTUATION = set(['+', '-', '*', '/', '%', ','])
+IMPLICIT_OPERATION = BinaryOperation(1, None, ' ', ['/', '//', '%'], None)
+FUNCTION_APPLICATION_OPERATION = BinaryOperation(1, None, '()', [], None)
 
 def create_fd() -> FunctionalityDatabase:
-    fd = FunctionalityDatabase(' ', '()', '(', '.', WHITESPACE_CHARS, LETTERS, DIGITS, PUNCTUATION, None, None)
+    fd = FunctionalityDatabase(IMPLICIT_OPERATION, FUNCTION_APPLICATION_OPERATION, '(', ')', '.', WHITESPACE_CHARS, LETTERS, DIGITS, PUNCTUATION, None, None)
 
     fd.register_operation(BinaryOperation(1, '+', '+', [], None))
     fd.register_operation(BinaryOperation(1, '-', '-', [], None))
@@ -510,11 +512,8 @@ def create_fd() -> FunctionalityDatabase:
     fd.register_operation(BinaryOperation(1, '%', '%', [], None))
     fd.register_operation(PrefixUnaryOperation(1, '+', '+u', None))
     fd.register_operation(PrefixUnaryOperation(1, '-', '-u', None))
-    fd.register_operation(BinaryOperation(1, None, ' ', ['/', '//', '%'], None))
     fd.register_operation(BinaryOperation(1, ',', ',', [], None))
-    fd.register_operation(BinaryOperation(1, None, '()', [], None))
 
-    fd.register_bracket('(', ')')
     fd.register_bracket('[', ']')
 
     fd.register_constant('pi', Rational(22, 7))

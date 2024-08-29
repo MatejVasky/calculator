@@ -45,7 +45,10 @@ class BinaryOperation(Operation):
             else:
                 raise FunctionOrOperationEvaluationError(e)
         else:
-            return res
+            if isinstance(res, Value):
+                return res
+            else:
+                raise FunctionOrOperationEvaluationError(TypeError("evaluate must return object of type Value"))
     
     def is_banned_after(self, operation : 'Operation'):
         """Returns True, if self is not allowed after operation"""
@@ -72,4 +75,7 @@ class PrefixUnaryOperation(Operation):
             else:
                 raise FunctionOrOperationEvaluationError(e)
         else:
-            return res
+            if isinstance(res, Value):
+                return res
+            else:
+                raise FunctionOrOperationEvaluationError(TypeError("evaluate must return object of type Value"))
