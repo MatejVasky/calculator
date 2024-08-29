@@ -8,21 +8,30 @@ FLOAT = 2
 TEXT = 3
 OPERATOR = 4
 
-class ExpressionParser:
+class ExpressionParser():
+    """A class for splitting arithmetic expressions into tokens"""
     def __init__(self, fd : FunctionalityDatabase):
+        """Creates an ExpressionParser. fd specifies the functionality database which should be used during evaluation"""
+        # Type check
+        if not isinstance(fd, FunctionalityDatabase):
+            raise TypeError("fd must be of type FunctionalityDatabase")
+        # Assignment
         self.fd = fd
 
     def parse_expression(self, expression : str) -> List[str]:
         """Splits a given arithmetic expression into tokens"""
+        # Type check
         if not isinstance(expression, str):
             raise TypeError("expression must be of type str")
-
+        
+        # Variable initialization
         state = NONE
         word = ''
         prev_word = None
         tokens : List[str] = []
         brackets : List[str] = []
 
+        # Main loop (fairly long, because it needs to deal with every (state, character_type) combination)
         for c in expression:
             if state == NONE:
                 if self.fd.is_whitespace(c):
@@ -177,6 +186,7 @@ class ExpressionParser:
                 else:
                     raise InvalidCharacterError
 
+        # Process the final token
         if state == NONE:
             if prev_word != None:
                 self.process_text(tokens, prev_word, ' ')
@@ -189,19 +199,26 @@ class ExpressionParser:
         elif state == OPERATOR:
             raise MissingOperandError()
         
+        # Check if it does not end in an operator
         if len(tokens) != 0 and self.fd.is_operator(tokens[-1]):
             raise MissingOperandError()
+        
+        # Check if no right brackets are missing
         if len(brackets) != 0:
             raise BracketsMismatchError()
         
+        # Return
         return tokens
     
     def process_number(self, tokens : List[str], word : str) -> None:
         """Adds a number (int or float) to tokens"""
+        # If the last token is an operand, raise an error (you cannot implicitly multiply by a number from the right)
         if self.needs_operation(tokens):
             raise ImplicitMultiplicationError()
+        # Check if the literal is not a single decimal point
         if word == self.fd.decimal_point:
             raise IsolatedDecimalPointError()
+        # Add to tokens
         tokens.append(word)
 
     def process_text(self, tokens : List[str], word : str, next_char : str) -> None:
@@ -255,25 +272,32 @@ class ExpressionParser:
 
     def process_left_bracket(self, tokens : List[str], brackets : List[str], char : str) -> None:
         """Adds a left bracket to tokens"""
+        # Insert implicit operation if necessary
         if self.needs_operation(tokens):
             tokens.append(self.fd.implicit_operator)
+        # Add to tokens and brackets
         tokens.append(char)
         brackets.append(char)
 
     def process_right_bracket(self, tokens : List[str], brackets : List[str], char : str) -> None:
         """Adds a right bracket to tokens"""
+        # If missing a left bracket, raise an error
         if len(tokens) == 0 or len(brackets) == 0:
             raise BracketsMismatchError()
+        # If there is an empty bracket, raise an error
         if self.fd.is_left_bracket(tokens[-1]):
             raise EmptyBracketsError()
+        # If the last operator inside the bracket is missing and operand, raise an error
         if self.fd.is_operator(tokens[-1]):
             raise MissingOperandError()
+        # If the bracket does not match with the last opening bracket, raise an error
         if not self.fd.brackets_match(brackets.pop(), char):
             raise BracketsMismatchError()
+        # Add to tokens
         tokens.append(char)
 
     def needs_operation(self, tokens : List[str]) -> bool:
-        """Checks if the previous oper"""
+        """Checks if the previous token is an operand"""
         return len(tokens) != 0 \
             and not self.fd.is_left_bracket(tokens[-1]) \
             and not self.fd.is_operator(tokens[-1])

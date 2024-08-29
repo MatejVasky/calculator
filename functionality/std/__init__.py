@@ -1,3 +1,5 @@
+"""A package for providing the standard value types, operations, functions, constants and parser"""
+
 from .numbers import ComplexNumber, Rational, ComplexRational, Decimal, ComplexDecimal
 from .operations import add, subtract, multiply, divide, floordivide, modulo, power, add_parameter, evaluate_function, pos, neg, assign_to_variable
 from .functions import exp, ln, log, sign, sqrt, root, floor, ceil, sin, cos, tan, cot, sec, csc, arcsin, arccos, arctan, gcd, lcm

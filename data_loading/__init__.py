@@ -1,4 +1,6 @@
-from .functionality_loader import load_functionality
-from .exceptions import LoadingException
+"""A package for loading data from the folder data/"""
 
-__all__ = ['load_functionality', 'LoadingException']
+from .functionality_loader import load_functionality
+from .exceptions import FunctionalityLoadingException
+
+__all__ = ['load_functionality', 'FunctionalityLoadingException']

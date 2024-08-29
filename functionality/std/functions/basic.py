@@ -6,6 +6,8 @@ import math
 
 @unpack_variables
 def exp(*args : Value) -> Union['Decimal', 'ComplexDecimal']:
+    """The (complex natural) exponential function"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("exp takes 1 argument")
     
@@ -16,6 +18,8 @@ def exp(*args : Value) -> Union['Decimal', 'ComplexDecimal']:
 
 @unpack_variables
 def ln(*args : Value) -> Union['Decimal', 'ComplexDecimal']:
+    """The (complex) natural logarithm. The result's imaginary value is always from (-pi, pi]"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("ln takes 1 argument")
     
@@ -28,21 +32,28 @@ def ln(*args : Value) -> Union['Decimal', 'ComplexDecimal']:
 
 @unpack_variables
 def log(*args : Value) -> Union['Decimal', 'ComplexDecimal']:
+    """log(b, x) returns the log_b (x). log(x) is equivalent to ln(x)"""
+    # With a single argument, compute the natural logarithm
     if len(args) == 1:
         return ln(args[0])
+    # With 2 arguments, compute log_b (x)
     elif len(args) == 2:
         b = args[0]
         x = args[1]
+        # Check if b is from (0, 1) U (1, infinity) and x from (0, infinity)
         if not isinstance(b, ComplexNumber) or not b.is_positive() or float(b) == 1:
             raise UndefinedError("log base must be from (0, 1) U (1, infinity)")
         if not isinstance(x, ComplexNumber) or not x.is_positive():
             raise UndefinedError("log argument must be from (0, infinity)")
+        # Return result
         return x.log() / b.log()
     else:
         raise WrongNumberOfArgumentsError("log takes 1 or 2 arguments")
 
 @unpack_variables
 def sign(*args : Value) -> ComplexNumber:
+    """Computes the sign function"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("sign takes 1 argument")
     
@@ -58,6 +69,8 @@ def sign(*args : Value) -> ComplexNumber:
 
 @unpack_variables
 def sqrt(*args : Value) -> Decimal:
+    """Computes the square root"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("sqrt takes 1 argument")
     
@@ -68,6 +81,8 @@ def sqrt(*args : Value) -> Decimal:
 
 @unpack_variables
 def root(*args : Value) -> Decimal:
+    """root(n, x) computes the n-th root of x"""
+    # Check the number of arguments
     if len(args) != 2:
         raise WrongNumberOfArgumentsError("root takes 2 arguments")
     
@@ -81,6 +96,8 @@ def root(*args : Value) -> Decimal:
 
 @unpack_variables
 def floor(*args : Value) -> Decimal:
+    """Computes the floor of a real number"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("floor takes 1 argument")
     
@@ -91,6 +108,8 @@ def floor(*args : Value) -> Decimal:
 
 @unpack_variables
 def ceil(*args : Value) -> Decimal:
+    """Computes the ceiling of a real number"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("ceil takes 1 argument")
     

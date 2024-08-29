@@ -1,22 +1,25 @@
 from .value import Value
 
 class Parameters(Value):
-    """A class representing a list of parameters of a function/operation"""
+    """A class representing a list of parameters of a function"""
     def __init__(self, *args : Value):
-        """Creates a Parameters object. args contains the objects"""
+        """Creates a Parameters object. Arguments will be saved as elements"""
         # Check arguments
         for arg in args:
             if not isinstance(arg, Value):
                 raise TypeError()
-        
+        # Assignments
         self.__args = args
     
     def __getitem__(self, index : int) -> Value:
         """Returns the parameter at the given index"""
+        # Check type
         if not isinstance(index, int):
             raise TypeError("Index must be of type int")
+        # Check if index is in range
         if index < -len(self.__args) or index >= len(self.__args):
             raise IndexError("Index out of range")
+        # Return
         return self.__args[index]
     
     def __len__(self) -> int:
@@ -41,7 +44,10 @@ class ParametersIterator():
     
     def __next__(self) -> Value:
         """Returns the next value"""
+        # Check for the end of iteration
         if self.__counter + 1 >= len(self.__parameters):
             raise StopIteration
+        # Increment counter
         self.__counter += 1
+        # Return
         return self.__parameters[self.__counter]

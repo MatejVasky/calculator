@@ -5,6 +5,8 @@ import datastructures
 
 @unpack_variables
 def gcd(*args : Value) -> Rational:
+    """Computes the greatest common divisor of 2 integers"""
+    # Check the number of arguments
     if len(args) != 2:
         raise WrongNumberOfArgumentsError("gcd takes 2 arguments")
     
@@ -16,6 +18,8 @@ def gcd(*args : Value) -> Rational:
 
 @unpack_variables
 def lcm(*args : Value) -> Rational:
+    """Computes the least common multiple of 2 positive integers"""
+    # Check the number of arguments
     if len(args) != 2:
         raise WrongNumberOfArgumentsError("lcm takes 2 arguments")
     

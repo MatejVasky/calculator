@@ -3,31 +3,34 @@ from arithmetic_expressions.functionality_database import FunctionalityDatabase,
 from io import TextIOBase
 import json
 import importlib
-from .exceptions import LoadingException
+from .exceptions import FunctionalityLoadingException
 
 def load_functionality(stream : TextIOBase) -> FunctionalityDatabase:
     """Creates a functionality database using data from stream"""
     try:
+        # Parse file
         data = json.load(stream)
         
+        # Load packages
         packages = load_packages(data["packages"])
 
+        # Load mandatory fields
         implicit_operation = create_binary_operation(packages, data["implicit_operation"])
         function_application_operator = create_binary_operation(packages, data["function_application_operator"])
         function_bracket_left = data["function_bracket"]["left"]
         function_bracket_right = data["function_bracket"]["right"]
         decimal_point = data["decimal_point"]
-
         whitespace_characters = set(data["whitespace_characters"])
         letters = set(data["letters"])
         digits = set(data["digits"])
         punctuation = set(data["punctuation"])
-
         parse_int = getattr(packages[data["int_parser"]["package"]], data["int_parser"]["function"])
         parse_decimal = getattr(packages[data["decimal_parser"]["package"]], data["decimal_parser"]["function"])
 
+        # Create a functionality database
         fd = FunctionalityDatabase(implicit_operation, function_application_operator, function_bracket_left, function_bracket_right, decimal_point, whitespace_characters, letters, digits, punctuation, parse_int, parse_decimal)
 
+        # Load non-mandatory fields
         if "binary_operations" in data:
             load_binary_operations(fd, packages, data["binary_operations"])
         if "prefix_unary_operations" in data:
@@ -41,10 +44,12 @@ def load_functionality(stream : TextIOBase) -> FunctionalityDatabase:
         if "functions" in data:
             load_functions(fd, packages, data["functions"])
         
+        # Return
         return fd
     
+    # Catch exceptions
     except Exception:
-        raise LoadingException("failed to load functionality")
+        raise FunctionalityLoadingException("failed to load functionality")
 
 def load_packages(package_names) -> dict[str, ModuleType]:
     """Loads packages with specified package names. Adds 'functionality.' to the start of every package name before importing it.

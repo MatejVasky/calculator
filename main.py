@@ -34,8 +34,12 @@ while True:
             else:
                 print(f'Result: {res}')
                 
-                approx = res.get_approximate_value()
-                if approx != None:
-                    print(f'Approximate result: {approx}')
+                try:
+                    approx = res.get_approximate_value()
+                except Exception:
+                    print("Failed to compute an approximate value")
+                else:
+                    if approx != None:
+                        print(f'Approximate result: {approx}')
 
     print()

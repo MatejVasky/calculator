@@ -5,6 +5,8 @@ import math
 
 @unpack_variables
 def sin(*args : Value) -> Decimal:
+    """Computes the sine"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("sin takes 1 argument")
     
@@ -15,6 +17,8 @@ def sin(*args : Value) -> Decimal:
 
 @unpack_variables
 def cos(*args : Value) -> Decimal:
+    """Computes the cosine"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("cos takes 1 argument")
     
@@ -25,6 +29,8 @@ def cos(*args : Value) -> Decimal:
 
 @unpack_variables
 def tan(*args : Value) -> Decimal:
+    """Computes the tangent"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("tan takes 1 argument")
     
@@ -37,6 +43,8 @@ def tan(*args : Value) -> Decimal:
 
 @unpack_variables
 def cot(*args : Value) -> Decimal:
+    """Computes the cotangent"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("cot takes 1 argument")
     
@@ -49,6 +57,8 @@ def cot(*args : Value) -> Decimal:
 
 @unpack_variables
 def sec(*args : Value) -> Decimal:
+    """Computes the secant"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("sec takes 1 argument")
     
@@ -61,6 +71,8 @@ def sec(*args : Value) -> Decimal:
 
 @unpack_variables
 def csc(*args : Value) -> Decimal:
+    """Computes the cosecant"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("csc takes 1 argument")
     
@@ -73,6 +85,8 @@ def csc(*args : Value) -> Decimal:
 
 @unpack_variables
 def arcsin(*args : Value) -> Decimal:
+    """Computes the arcsine. Takes values from [-1, 1] and returns a value from [-pi/2, pi/2]"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("arcsin takes 1 argument")
     
@@ -83,6 +97,8 @@ def arcsin(*args : Value) -> Decimal:
 
 @unpack_variables
 def arccos(*args : Value) -> Decimal:
+    """Computes the arccosine. Takes values from [-1, 1] and returns a value from [0, pi]"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("arccos takes 1 argument")
     
@@ -93,6 +109,8 @@ def arccos(*args : Value) -> Decimal:
 
 @unpack_variables
 def arctan(*args : Value) -> Decimal:
+    """Computes the arctangent. Returns values from (-pi/2, pi/2)"""
+    # Check the number of arguments
     if len(args) != 1:
         raise WrongNumberOfArgumentsError("arctan takes 1 argument")
     
