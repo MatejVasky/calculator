@@ -1,0 +1,6 @@
+"""A package for defining exceptions raised during the parsing and evaluation of an arithmetic expression"""
+
+from .parsing_exceptions import ParsingError, InvalidCharacterError, ImplicitMultiplicationError, BracketsMismatchError, EmptyBracketsError, MissingOperandError, UnknownVariableError, UnknownOperatorError, TwoDecimalPointsError, IsolatedDecimalPointError
+from .evalation_exceptions import EvaluationError, WrongNumberOfArgumentsError, UndefinedError, VariableUndefinedError, ParserError, ParserEvaluationError, FunctionOrOperationEvaluationError, InvalidTokensError, BannedSequenceOfOperationsError
+
+__all__ = ['ParsingError', 'InvalidCharacterError', 'ImplicitMultiplicationError', 'BracketsMismatchError', 'EmptyBracketsError', 'MissingOperandError', 'UnknownVariableError', 'UnknownOperatorError', 'TwoDecimalPointsError', 'IsolatedDecimalPointError', 'EvaluationError', 'WrongNumberOfArgumentsError', 'UndefinedError', 'VariableUndefinedError', 'ParserError', 'ParserEvaluationError', 'FunctionOrOperationEvaluationError', 'InvalidTokensError', 'BannedSequenceOfOperationsError']
