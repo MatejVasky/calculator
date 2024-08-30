@@ -15,13 +15,15 @@ except:
     print("Failed to load functionality")
     input("Press enter to close the program")
     quit()
-print("Functionality loaded", end="\n\n")
+print("Functionality loaded")
 
 # Initializing the parser and the evaluator
 parser = ExpressionParser(fd)
 evaluator = ExpressionEvaluator(fd)
 
 while True:
+    print()
+
     # Get input
     expression = input('>> ')
 
@@ -54,5 +56,3 @@ while True:
     else:
         if approx != None:
             print(f'Approximate result: {approx}')
-
-    print()
