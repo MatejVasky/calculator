@@ -68,7 +68,7 @@ class BinaryOperation(Operation):
             else:
                 raise FunctionOrOperationEvaluationError(TypeError("evaluate must return object of type Value"))
     
-    def is_banned_after(self, operation : 'Operation'):
+    def is_banned_after(self, operation : 'BinaryOperation'):
         """Returns True, if self is not allowed after operation"""
         return isinstance(operation, BinaryOperation) and \
             self.priority == operation.priority and \
